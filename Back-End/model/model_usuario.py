@@ -1,4 +1,5 @@
 from alchemyClasses.Usuario import Usuario
+#from flask_sqlalchemy import SQLAlchemy
 
 def get_all_users():
     return Usuario.query.all()

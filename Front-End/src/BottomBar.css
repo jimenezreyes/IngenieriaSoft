@@ -1,0 +1,24 @@
+/* BottomBar.css */
+
+.BottomBar {
+  background-color: #003366; /* Color azul oscuro */
+  color: #fff; /* Color de texto blanco, ajusta según sea necesario */
+  padding: 10px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  font-family: Georgia, serif; 
+}
+
+.Content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.Content img {
+  height: 35px; /* Ajusta la altura según tus necesidades */
+  margin-right: 40px;
+}
+
