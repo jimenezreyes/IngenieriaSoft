@@ -8,7 +8,7 @@ function Register() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
 
-  const handleRegistro = (e) => {
+  const handleRegistro = async (e) => {
     e.preventDefault();
 
     // Aquí puedes enviar los datos al servidor para el registro
@@ -16,11 +16,19 @@ function Register() {
       nombre,
       apellido,
       correo,
-      contrasena,
+      password: contrasena,
     };
 
     console.log('Datos de registro:', datosRegistro);
     // Luego, puedes realizar una solicitud al servidor para manejar el registro.
+    const res = await fetch(`http://127.0.0.1:5000/register`,{
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify(datosRegistro)
+    });
+    const data = await res.json();
   };
 
   const navigate = useNavigate();
@@ -74,7 +82,7 @@ function Register() {
         />
         <ul> 
           <li>
-            <input type="submit" value="Registrar" />
+            <button onClick={handleRegistro}>Registrar</button>
           </li>   
           <li>
             <button onClick={handleClick}>Volver</button>

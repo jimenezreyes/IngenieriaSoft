@@ -9,10 +9,6 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    console.log('Email:', email);
-    console.log('Contraseña:', password);
-
-
     const res = await fetch(`http://127.0.0.1:5000/login`,{
       method: 'POST',
       headers: {
@@ -21,7 +17,6 @@ function Login() {
       body: JSON.stringify({email, password})
     });
     const data = await res.json();
-    console.log(data);
   };
 
   const navigate = useNavigate();
