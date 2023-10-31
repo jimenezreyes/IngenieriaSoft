@@ -30,7 +30,7 @@ function Login() {
       <h1>Iniciar Sesión</h1>
       <form>
         <div className="form-group">
-          <label htmlFor="email">Nombre de Usuario:</label>
+          <label htmlFor="email">Dirección de email:</label>
           <input
             type="text"
             id="username"
