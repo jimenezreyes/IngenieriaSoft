@@ -1,5 +1,5 @@
 # Ingenieria de Software (Michi Games) 
-![Logo](https://github.com/jimenezreyes/IngenieriaSoft/issues/1#issue-1974550264)
+![Logo](https://github.com/jimenezreyes/IngenieriaSoft/blob/main/Fondo%20michi%20games.jpeg)
 
 ## Descripción
 Login completamente funcional
