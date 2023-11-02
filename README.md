@@ -27,9 +27,13 @@ Para ejecutar el proyecto, sigue estos pasos:
    - La base de datos se llama "proyecto".
 
 ## Requisitos del Sistema
-- Node.js 
-- Python
-- React
-- Flask
+- [Node.js](https://nodejs.org/en)
+- [Python](https://www.python.org/downloads/)
+- React. Ejecutaremos el siguiente comando en terminal -> npx create-react-app my-react-app
+  - Reemplaza "my-react-app" con el nombre de tu proyecto.
+  - Para iniciar la aplicación React, ejecuta cd my-react-app y luego npm start
+- Flask. En la terminal ejecutamos el siguiente comando -> pip install Flask
+- MySQL. En la terminal ejecutamos el siguiente comando -> sudo apt-get install mysql-server 
+  
 
   
