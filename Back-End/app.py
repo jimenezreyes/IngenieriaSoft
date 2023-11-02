@@ -58,11 +58,13 @@ def login():
             user = participante_query[0]
             if not validate(password, user.psswd):
                 flash('Contraseña incorrecta')
+                return jsonify({'error' : 'Contraseña incorrecta'})
                 # return render_template('login.html')
             session.clear()
             session['user']= user.nombre
             session['email']= user.correo
             session.modified = True
+            return jsonify({'error' : 'Ninguno'})
             #return render_template('index.html')
         except KeyError:
             flash('No fue enviado con éxito el correo y/o la contraseña')

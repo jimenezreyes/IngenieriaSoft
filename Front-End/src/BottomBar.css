@@ -2,7 +2,7 @@
 
 .BottomBar {
   background-color: #003366; /* Color azul oscuro */
-  color: #fff; /* Color de texto blanco, ajusta según sea necesario */
+  color: #fff;
   padding: 10px;
   text-align: center;
   position: fixed;
@@ -18,7 +18,7 @@
 }
 
 .Content img {
-  height: 35px; /* Ajusta la altura según tus necesidades */
+  height: 35px;
   margin-right: 40px;
 }
 

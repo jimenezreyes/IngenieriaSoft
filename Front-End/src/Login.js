@@ -4,22 +4,31 @@ import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState(''); 
-
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+  
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    const res = await fetch(`http://127.0.0.1:5000/login`,{
+    
+    const res = await fetch(`http://127.0.0.1:5000/login`, {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({email, password})
+      body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-  };
 
-  const navigate = useNavigate();
+    if (data.error === 'Ese correo no existe') {
+      // Muestra la alerta para el correo no existente
+      alert('Correo no existente');
+    } else if (data.error === 'Contraseña incorrecta') {
+      // Muestra la alerta para contraseña incorrecta
+      alert('Contraseña incorrecta');
+    } else if (data.error === 'Ninguno') {
+      navigate('/participante');
+    }
+  };
 
   const handleRegistrar = () => {
     navigate('/registrar');
@@ -32,7 +41,7 @@ function Login() {
         <div className="form-group">
           <label htmlFor="email">Dirección de email:</label>
           <input
-            type="text"
+            type="email"
             id="username"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -46,17 +55,17 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-        </div> 
+        </div>
         <nav>
-        <ul> 
-          <li>
-            <button type="button" onClick={handleLogin}> Iniciar Sesión </button>
-          </li>
-          <li>
-            <button type="button" onClick={handleRegistrar}>Registrar nuevo usuario</button>
-          </li>          
-        </ul>
-      </nav>        
+          <ul>
+            <li>
+              <button type="button" onClick={handleLogin}> Iniciar Sesión </button>
+            </li>
+            <li>
+              <button type="button" onClick={handleRegistrar}>Registrar nuevo usuario</button>
+            </li>
+          </ul>
+        </nav>
       </form>
     </div>
   );
