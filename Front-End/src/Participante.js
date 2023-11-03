@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 function Participante() {
     const navigate = useNavigate();
     const handleLogout = () => {
+        localStorage.clear();
         navigate('/');
     };
 

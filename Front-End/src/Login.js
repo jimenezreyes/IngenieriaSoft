@@ -6,27 +6,33 @@ function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  
+
   const handleLogin = async (e) => {
     e.preventDefault();
-    
-    const res = await fetch(`http://127.0.0.1:5000/login`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({ email, password })
-    });
-    const data = await res.json();
 
-    if (data.error === 'Ese correo no existe') {
-      // Muestra la alerta para el correo no existente
-      alert('Correo no existente');
-    } else if (data.error === 'Contraseña incorrecta') {
-      // Muestra la alerta para contraseña incorrecta
-      alert('Contraseña incorrecta');
-    } else if (data.error === 'Ninguno') {
-      navigate('/participante');
+    try {
+      const res = await fetch(`http://127.0.0.1:5000/login`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({ email, password })
+      });
+      const data = await res.json();
+
+      if (data.error === 'Ese correo no existe') {
+        // Muestra la alerta para el correo no existente
+        alert('Correo no existente');
+      } else if (data.error === 'Contraseña incorrecta') {
+        // Muestra la alerta para contraseña incorrecta
+        alert('Contraseña incorrecta');
+      } else if (data.error === 'Ninguno') {
+        navigate('/participante');
+      }
+    } catch (error) {
+      // Error en la solicitud fetch
+      console.error(error);
+      alert('Error en el servidor, intenta más tarde');
     }
   };
 
