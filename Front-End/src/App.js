@@ -4,6 +4,8 @@ import Login from "./Login";
 import Register from "./Register";
 import BottomBar from "./BottomBar";
 import Participante from "./Participante";
+import Administrador from './Administrador';
+import Superadmin from './Superadmin';
 import "./App.css";
 
 
@@ -14,7 +16,9 @@ function App() {
         <Routes>
             <Route path="/" element={<Login />} />            
             <Route path="registrar" element={<Register />} /> 
-            <Route path="participante" element={<Participante />} />                   
+            <Route path="participante" element={<Participante />} />
+            <Route path="administrador" element={<Administrador />} />
+            <Route path="superadmin" element={<Superadmin />} />
         </Routes> 
         <BottomBar />      
     </div>  

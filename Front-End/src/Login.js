@@ -27,7 +27,13 @@ function Login() {
         // Muestra la alerta para contraseña incorrecta
         alert('Contraseña incorrecta');
       } else if (data.error === 'Ninguno') {
-        navigate('/participante');
+        if (data.usuario === 'participante') {
+          navigate('/participante');
+        } else if (data.usuario === 'superadmin') {
+          navigate('/superadmin');
+        } else if (data.usuario === 'administrador') {
+          navigate('/administrador');
+        }
       }
     } catch (error) {
       // Error en la solicitud fetch

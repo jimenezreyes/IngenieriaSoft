@@ -8,7 +8,23 @@ from flask import Flask, render_template, request, flash, session, g, redirect, 
 from flask_cors import CORS
 
 from controllers.JsonController import json_controller
+from model.model_administrador import get_admin_by_email
+from model.model_superadmin import get_superadmin_by_email
 from model.model_participante import get_participante_by_email
+
+def get_user_by_email(email):
+    participante_query = get_participante_by_email(email)
+    administrador_query = get_admin_by_email(email)
+    superadministrador_query = get_superadmin_by_email(email)
+
+    if participante_query:
+        return participante_query, "participante"
+    elif administrador_query:
+        return administrador_query, "administrador"
+    elif superadministrador_query:
+        return superadministrador_query, "superadmin"
+    else:
+        return None, "none"
 
 app = Flask(__name__)
 app.register_blueprint(json_controller)
@@ -50,12 +66,12 @@ def login():
         try:
             email = datos_json['email']
             password = datos_json['password']
-            participante_query = get_participante_by_email(email)
-            if not (participante_query):
+            user_query, tipo_usuario = get_user_by_email(email)
+            if not (user_query):
                 flash('Ese correo no existe.')
                 return jsonify({'error' : 'Ese correo no existe'})
                 #return render_template('login.html')
-            user = participante_query[0]
+            user = user_query[0]
             if not validate(password, user.psswd):
                 flash('Contraseña incorrecta')
                 return jsonify({'error' : 'Contraseña incorrecta'})
@@ -64,7 +80,7 @@ def login():
             session['user']= user.nombre
             session['email']= user.correo
             session.modified = True
-            return jsonify({'error' : 'Ninguno'})
+            return jsonify({'error' : 'Ninguno', 'usuario': tipo_usuario})
             #return render_template('index.html')
         except KeyError:
             flash('No fue enviado con éxito el correo y/o la contraseña')
