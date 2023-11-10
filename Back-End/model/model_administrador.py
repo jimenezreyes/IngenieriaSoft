@@ -13,4 +13,4 @@ def get_admin_by_apellido(apellido):
     return Administrador.query.filter(Administrador.apellido == apellido).all()
 
 def get_admin_by_email(email):
-    return Administrador.query.filter(Administrador.correo == email).all()
+    return Administrador.query.filter(Administrador.correo == email).first()

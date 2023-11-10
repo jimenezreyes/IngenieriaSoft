@@ -162,6 +162,26 @@ def insert_admin():
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": str(e)}), 500
+        
+@app.route("/updateadmin", methods=["PUT"])
+def update_admin():
+    if request.method == "PUT":
+        datos_json = request.get_json()
+        nombre = datos_json["nombre"]
+        apellido = datos_json["apellido"]
+        email = datos_json["email"]
+        admin = get_admin_by_email(email)
+    
+        admin.nombre = nombre
+        admin.apellido = apellido
+        admin.correo = email
+    
+        try:
+            db.session.commit()
+            return jsonify({"message": "Administrador editado correctamente"}), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

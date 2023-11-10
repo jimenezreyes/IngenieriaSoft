@@ -23,6 +23,11 @@ class CRUDAdmin extends React.Component {
       email: "",
       psswd: "",
     },
+    formActualizar: {
+      nombre: "",
+      apellido: "",
+      email: "",
+    },
   };
 
   componentDidMount() {
@@ -38,7 +43,7 @@ class CRUDAdmin extends React.Component {
 
   mostrarModalActualizar = (dato) => {
     this.setState({
-      form: dato,
+      formActualizar: dato,
       modalActualizar: true,
     });
   };
@@ -57,17 +62,25 @@ class CRUDAdmin extends React.Component {
     this.setState({ modalInsertar: false });
   };
 
-  editar = (dato) => {
-    var contador = 0;
-    var arreglo = this.state.data;
-    arreglo.map((registro) => {
-      if (dato.id === registro.id) {
-        arreglo[contador].admin = dato.admin;
-        arreglo[contador].email = dato.email;
-      }
-      contador++;
-    });
-    this.setState({ data: arreglo, modalActualizar: false });
+  editar = () => {
+    const { nombre, apellido, email } = this.state.formActualizar;
+    fetch("http://127.0.0.1:5000/updateadmin", {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ nombre, apellido, email }),
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        this.setState({ modalActualizar: false });
+      })
+      .catch(error => {
+        console.error("Error al editar administrador:", error);
+        alert("Error al editar administrador. Por favor, inténtalo nuevamente más tarde.");
+        this.setState({ modalActualizar: false });
+      });
   };
 
   eliminar = (dato) => {
@@ -132,13 +145,22 @@ class CRUDAdmin extends React.Component {
     });
   };
 
+  handleChangeActualizar = (e) => {
+    this.setState({
+      formActualizar: {
+        ...this.state.formActualizar,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
   render() {
-    
+
     return (
       <>
         <Container>
-        <br />
-          <Button color="success" onClick={()=>this.mostrarModalInsertar()}>Nuevo administrador</Button>
+          <br />
+          <Button color="success" onClick={() => this.mostrarModalInsertar()}>Nuevo administrador</Button>
           <br />
           <br />
           <Table>
@@ -166,7 +188,7 @@ class CRUDAdmin extends React.Component {
                     >
                       Editar
                     </Button>{" "}
-                    <Button color="danger" onClick={()=> this.eliminar(dato)}>Eliminar</Button>
+                    <Button color="danger" onClick={() => this.eliminar(dato)}>Eliminar</Button>
                   </td>
                 </tr>
               ))}
@@ -174,48 +196,49 @@ class CRUDAdmin extends React.Component {
           </Table>
         </Container>
 
-        {/* <Modal isOpen={this.state.modalActualizar}>
+        <Modal isOpen={this.state.modalActualizar}>
           <ModalHeader>
-           <div><h3>Editar Registro</h3></div>
+            <div><h3>Editar Administrador</h3></div>
           </ModalHeader>
 
           <ModalBody>
             <FormGroup>
               <label>
-               ID:
+                Nombre:
               </label>
-            
+
               <input
                 className="form-control"
-                readOnly
+                name="nombre"
                 type="text"
-                value={this.state.form.id}
+                onChange={this.handleChangeActualizar}
+                value={this.state.formActualizar.nombre}
               />
             </FormGroup>
-            
+
             <FormGroup>
               <label>
-                Administrador: 
+                Apellido:
               </label>
               <input
                 className="form-control"
-                name="admin"
+                name="apellido"
                 type="text"
-                onChange={this.handleChange}
-                value={this.state.form.admin}
+                onChange={this.handleChangeActualizar}
+                value={this.state.formActualizar.apellido}
               />
             </FormGroup>
-            
+
             <FormGroup>
               <label>
-                Email: 
+                Email:
               </label>
               <input
                 className="form-control"
                 name="email"
                 type="text"
-                onChange={this.handleChange}
-                value={this.state.form.email}
+                onChange={this.handleChangeActualizar}
+                value={this.state.formActualizar.email}
               />
             </FormGroup>
           </ModalBody>
@@ -223,7 +246,7 @@ class CRUDAdmin extends React.Component {
           <ModalFooter>
             <Button
               color="primary"
-              onClick={() => this.editar(this.state.form)}
+              onClick={() => this.editar()}
             >
               Editar
             </Button>
@@ -234,19 +257,19 @@ class CRUDAdmin extends React.Component {
               Cancelar
             </Button>
           </ModalFooter>
-        </Modal> */}
+        </Modal>
 
         <Modal isOpen={this.state.modalInsertar}>
           <ModalHeader>
-           <div><h3>Insertar Administrador</h3></div>
+            <div><h3>Insertar Administrador</h3></div>
           </ModalHeader>
 
           <ModalBody>
             <FormGroup>
               <label>
-                Nombre: 
+                Nombre:
               </label>
-              
+
               <input
                 className="form-control"
                 name="nombre"
@@ -254,10 +277,10 @@ class CRUDAdmin extends React.Component {
                 onChange={this.handleChangeInsertar}
               />
             </FormGroup>
-            
+
             <FormGroup>
               <label>
-                Apellido: 
+                Apellido:
               </label>
               <input
                 className="form-control"
@@ -266,10 +289,10 @@ class CRUDAdmin extends React.Component {
                 onChange={this.handleChangeInsertar}
               />
             </FormGroup>
-            
+
             <FormGroup>
               <label>
-                Email: 
+                Email:
               </label>
               <input
                 className="form-control"
@@ -281,7 +304,7 @@ class CRUDAdmin extends React.Component {
 
             <FormGroup>
               <label>
-                Contraseña: 
+                Contraseña:
               </label>
               <input
                 className="form-control"
