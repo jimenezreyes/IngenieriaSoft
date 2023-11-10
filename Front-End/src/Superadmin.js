@@ -1,6 +1,7 @@
 import React from 'react';
 import './Superadmin.css';
 import { useNavigate } from 'react-router-dom';
+import CRUDAdmin from './CRUDAdmin';
 
 function Superadmin() {
     const navigate = useNavigate();
@@ -11,7 +12,8 @@ function Superadmin() {
 
     return (
         <div>
-            <h1>¡Bienvenido Superadministrador!</h1>
+            <h1>¡Hola, superadmin!</h1>
+            <CRUDAdmin />
             <button onClick={handleLogout}>Cerrar Sesión</button>
         </div>
     );

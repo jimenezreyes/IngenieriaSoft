@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
 import "./Login.css";
 
 function Login() {
@@ -27,11 +27,11 @@ function Login() {
         // Muestra la alerta para contraseña incorrecta
         alert('Contraseña incorrecta');
       } else if (data.error === 'Ninguno') {
-        if (data.usuario === 'participante') {
+        if (data.tipo_usuario === 'participante') {
           navigate('/participante');
-        } else if (data.usuario === 'superadmin') {
+        } else if (data.tipo_usuario === 'superadmin') {
           navigate('/superadmin');
-        } else if (data.usuario === 'administrador') {
+        } else if (data.tipo_usuario === 'administrador') {
           navigate('/administrador');
         }
       }
