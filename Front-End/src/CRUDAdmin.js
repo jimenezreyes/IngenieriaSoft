@@ -15,6 +15,7 @@ import {
 class CRUDAdmin extends React.Component {
   state = {
     data: [],
+    dataFiltrada: [],
     modalActualizar: false,
     modalInsertar: false,
     formInsertar: {
@@ -28,13 +29,14 @@ class CRUDAdmin extends React.Component {
       apellido: "",
       email: "",
     },
+    busqueda: "",
   };
 
   componentDidMount() {
     fetch("http://127.0.0.1:5000/readadmin")
       .then((response) => response.json())
       .then((data) => {
-        this.setState({ data: data });
+        this.setState({ data: data, dataFiltrada: data });
       })
       .catch((error) => {
         alert("Error al obtener datos del servidor:", error);
@@ -154,6 +156,24 @@ class CRUDAdmin extends React.Component {
     });
   };
 
+  handleChangeBuscar = async (e) => {
+    e.persist();
+    await this.setState({ busqueda: e.target.value });
+    this.filtrarElementos();
+  }
+
+  filtrarElementos = () => {
+    var search = this.state.dataFiltrada.filter(item => {
+      if(item.id.toString().includes(this.state.busqueda) ||
+      item.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(this.state.busqueda.toLowerCase()) ||
+      item.apellido.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(this.state.busqueda.toLowerCase()) ||
+      item.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(this.state.busqueda.toLowerCase())){
+        return item;
+      }
+    });
+    this.setState({ data: search });
+  }
+
   render() {
 
     return (
@@ -161,6 +181,17 @@ class CRUDAdmin extends React.Component {
         <Container>
           <br />
           <Button color="success" onClick={() => this.mostrarModalInsertar()}>Nuevo administrador</Button>
+          <div className="barraBusqueda">
+            <input
+              type="text"
+              placeholder="Buscar"
+              className="textField"
+              name="busqueda"
+              value={this.state.busqueda}
+              onChange={this.handleChangeBuscar}
+            />
+            <Button className="btnBuscar" color="primary">Buscar</Button>
+          </div>
           <br />
           <br />
           <Table>
