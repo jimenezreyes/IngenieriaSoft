@@ -19,9 +19,12 @@ from flask import (
 from flask_cors import CORS
 
 from controllers.AdminController import admin
-from model.model_administrador import get_admin_by_email, get_all_admins
+from controllers.TorneoController import torneo
+
+from model.model_administrador import get_admin_by_email, get_all_admins, get_admin_by_id
 from model.model_superadmin import get_superadmin_by_email
 from model.model_participante import get_participante_by_email
+
 
 
 def get_user_by_email(email):
@@ -40,13 +43,17 @@ def get_user_by_email(email):
 
 
 app = Flask(__name__)
-app.register_blueprint(admin)
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "mysql+pymysql://michigames:michigames123@localhost:3306/proyecto"
 app.config.from_mapping(
     SECRET_KEY="dev",
 )
+
+#Agregamos controladores
+app.register_blueprint(admin)
+app.register_blueprint(torneo)
+
 db.init_app(app)
 CORS(app)
 
@@ -112,8 +119,8 @@ def login():
             # return render_template('index.html')
         except KeyError:
             flash("No fue enviado con éxito el correo y/o la contraseña")
-            # return render_template('login.html')
-    # return render_template('login.html')
+            return render_template('login.html')
+    return render_template('login.html')
 
 
 @app.route("/index", methods=["GET", "POST"])
@@ -130,58 +137,6 @@ def logout():
     g.user = None
     return redirect(url_for("login"))
 
-
-@app.route("/readadmin", methods=["GET"])
-def read_admin():
-    admins = get_all_admins()
-    admins_list = []
-    for admin in admins:
-        admin_data = {
-            "id": admin.idAdministrador,
-            "nombre": admin.nombre,
-            "apellido": admin.apellido,
-            "email": admin.correo,
-        }
-        admins_list.append(admin_data)
-    return jsonify(admins_list)
-
-
-@app.route("/insertadmin", methods=["POST"])
-def insert_admin():
-    if request.method == "POST":
-        datos_json = request.get_json()
-        nombre = datos_json["nombre"]
-        apellido = datos_json["apellido"]
-        email = datos_json["email"]
-        psswd = datos_json["psswd"]
-        nuevo_admin = Administrador(nombre, apellido, email, psswd, 1)
-        try:
-            db.session.add(nuevo_admin)
-            db.session.commit()
-            return jsonify({"message": "Administrador insertado correctamente"}), 201
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({"error": str(e)}), 500
-        
-@app.route("/updateadmin", methods=["PUT"])
-def update_admin():
-    if request.method == "PUT":
-        datos_json = request.get_json()
-        nombre = datos_json["nombre"]
-        apellido = datos_json["apellido"]
-        email = datos_json["email"]
-        admin = get_admin_by_email(email)
-    
-        admin.nombre = nombre
-        admin.apellido = apellido
-        admin.correo = email
-    
-        try:
-            db.session.commit()
-            return jsonify({"message": "Administrador editado correctamente"}), 201
-        except Exception as e:
-            db.session.rollback()
-            return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

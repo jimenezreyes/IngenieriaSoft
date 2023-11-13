@@ -18,6 +18,8 @@ class CRUDAdmin extends React.Component {
     dataFiltrada: [],
     modalActualizar: false,
     modalInsertar: false,
+    modalEliminar: false,
+    administradorAEliminar: '',
     formInsertar: {
       nombre: "",
       apellido: "",
@@ -33,7 +35,7 @@ class CRUDAdmin extends React.Component {
   };
 
   componentDidMount() {
-    fetch("http://127.0.0.1:5000/readadmin")
+    fetch("http://127.0.0.1:5000/admin/readadmin")
       .then((response) => response.json())
       .then((data) => {
         this.setState({ data: data, dataFiltrada: data });
@@ -42,6 +44,12 @@ class CRUDAdmin extends React.Component {
         alert("Error al obtener datos del servidor:", error);
       });
   }
+
+  mostrarTodosTorneos = () => {
+    // Realiza la redirección a la nueva página
+    window.location.href = "http://localhost:5000/torneo/readtorneos";
+  };
+  
 
   mostrarModalActualizar = (dato) => {
     this.setState({
@@ -64,9 +72,27 @@ class CRUDAdmin extends React.Component {
     this.setState({ modalInsertar: false });
   };
 
+ 
+  cerrarModalActualizar = () => {
+    this.setState({ modalActualizar: false });
+  }
+
+  mostrarModalEliminar = (dato) => {
+    this.setState({
+      modalEliminar: true,
+      administradorAEliminar : dato.id
+    });
+  }
+  
+
+  cerrarModalEliminar = () => {
+    this.setState({ modalEliminar: false });
+  }
+
+  
   editar = () => {
     const { nombre, apellido, email } = this.state.formActualizar;
-    fetch("http://127.0.0.1:5000/updateadmin", {
+    fetch("http://127.0.0.1:5000/admin/updateadmin", {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -86,19 +112,28 @@ class CRUDAdmin extends React.Component {
   };
 
   eliminar = (dato) => {
-    var opcion = window.confirm("¿Estás segur@ de eliminar el elemento " + dato.id + "?");
-    if (opcion === true) {
-      var contador = 0;
-      var arreglo = this.state.data;
-      arreglo.map((registro) => {
-        if (dato.id === registro.id) {
-          arreglo.splice(contador, 1);
+      fetch("http://127.0.0.1:5000/admin/deleteadmin", {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ idAdministrador: dato.id }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
+        if (data.message) {
+          this.componentDidMount();
+          this.setState({ modalEliminar: false, administradorAEliminar: null });
+        } else {
+          alert('Error al eliminar administrador en el servidor: ' + data.error);
         }
-        contador++;
+      })
+      .catch(error => {
+        console.error("Error al eliminar administrador:", error);
+        alert("Error al eliminar administrador. Por favor, inténtalo más tarde.");
       });
-      this.setState({ data: arreglo, modalActualizar: false });
-    }
-  };
+    };
 
   // const res = await fetch(`http://127.0.0.1:5000/login`, {
   //       method: 'POST',
@@ -111,7 +146,7 @@ class CRUDAdmin extends React.Component {
 
   insertar = () => {
     const { nombre, apellido, email, psswd } = this.state.formInsertar;
-    fetch("http://127.0.0.1:5000/insertadmin", {
+    fetch("http://127.0.0.1:5000/admin/insertadmin", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -122,6 +157,7 @@ class CRUDAdmin extends React.Component {
       .then(data => {
         console.log(data);
         this.setState({ modalInsertar: false });
+        this.componentDidMount();
       })
       .catch(error => {
         console.error("Error al insertar administrador:", error);
@@ -174,13 +210,16 @@ class CRUDAdmin extends React.Component {
     this.setState({ data: search });
   }
 
-  render() {
 
+  render() {
     return (
       <>
         <Container>
           <br />
-          <Button color="success" onClick={() => this.mostrarModalInsertar()}>Nuevo administrador</Button>
+          <div className="d-flex justify-content-between">
+              <Button style={{ marginRight: '10px' }}  color="success" onClick={() => this.mostrarModalInsertar()}>Nuevo administrador</Button>
+              <Button style={{ marginRight: '10px' }}  color="success" onClick={() => this.mostrarTodosTorneos()}>Ver Torneos Actuales</Button>
+          </div>
           <div className="barraBusqueda">
             <input
               type="text"
@@ -216,16 +255,16 @@ class CRUDAdmin extends React.Component {
                     <Button
                       color="primary"
                       onClick={() => this.mostrarModalActualizar(dato)}
-                    >
-                      Editar
+                    >Editar
                     </Button>{" "}
-                    <Button color="danger" onClick={() => this.eliminar(dato)}>Eliminar</Button>
+                    <Button color="danger" onClick={() => this.mostrarModalEliminar(dato)}>Eliminar</Button>
                   </td>
                 </tr>
               ))}
             </tbody>
           </Table>
         </Container>
+
 
         <Modal isOpen={this.state.modalActualizar}>
           <ModalHeader>
@@ -361,8 +400,29 @@ class CRUDAdmin extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
+
+        <Modal isOpen={this.state.modalEliminar}>
+          <ModalHeader>
+            <div><h3>Eliminar Administrador</h3></div>
+            </ModalHeader>
+            <ModalBody>
+              <p>¿Esta seguro que quiere eliminar 
+                el administrador con id: {this.state.administradorAEliminar}?
+              </p>
+            </ModalBody>
+            
+            <ModalFooter>
+              <Button color="danger" onClick={() => this.eliminar({id: this.state.administradorAEliminar})}>
+                Confirmar
+                </Button>
+                <Button color="secondary" onClick={() => this.setState({ modalEliminar: false, administradorAEliminar: null })}>
+                Cancelar
+                </Button>
+            </ModalFooter>
+        </Modal>
       </>
     );
   }
 }
+
 export default CRUDAdmin;
