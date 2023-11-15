@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from alchemyClasses.Torneo import Torneo
 from alchemyClasses import db
 
-from model.model_torneo import get_all_torneos, get_torneo_by_id
+from model.model_torneo import get_all_torneos, get_torneo_by_id, get_current_datetime
 from datetime import datetime
 
 torneo = Blueprint('torneo', __name__, url_prefix='/torneo')
@@ -15,8 +15,7 @@ def read_torneos():
         torneo_data = {
             "id": torneo.idTorneo,
             "nombre": torneo.nombre,
-            "fecha": torneo.fecha.strftime("%Y-%m-%d"),
-            "hora":torneo.hora.strftime("%H:%M:%S"),
+            "fechahora": torneo.fechahora.strftime("%Y-%m-%d %H:%M:%S"),
             "idAdministrador": torneo.idAdministrador
         }
         torneos_list.append(torneo_data)
@@ -28,8 +27,7 @@ def insert_torneo():
     if request.method == "POST":
         datos_json = request.get_json()
         nombre = datos_json["nombre"]
-        fecha = datetime.strptime(datos_json["fecha"], "%Y-%m-%d")
-        hora = datetime.strptime(datos_json["hora"], "%H:%M:%S")
+        fecha_hora_actual= datetime.now()
         id_administrador = datos_json["idAdministrador"]
 
         nuevo_torneo = Torneo(fecha, nombre, hora, id_administrador)
@@ -47,15 +45,13 @@ def update_torneo():
         datos_json = request.get_json()
         id_torneo = datos_json["id"]
         nombre = datos_json["nombre"]
-        fecha = datetime.strptime(datos_json["fecha"], "%Y-%m-%d")
-        hora = datetime.strptime(datos_json["hora"], "%H:%M:%S")
+        fecha_hora_actual = datetime.now()
         id_administrador = datos_json["idAdministrador"]
 
         torneo = get_torneo_by_id(id_torneo)
 
         torneo.nombre = nombre
-        torneo.fecha = fecha
-        torneo.hora = hora
+        torneo.fechahora = fecha_hora_actual
         torneo.idAdministrador = id_administrador
 
         try:

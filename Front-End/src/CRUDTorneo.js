@@ -21,14 +21,14 @@ class CRUDTorneo extends React.Component {
     modalEliminar: false,
     formInsertar: {
       nombre: "",
-      fecha: "",
-      hora: "",
+      fechahora: "",
+      
     },
     formActualizar: {
       id: null,
       nombre: "",
-      fecha: "",
-      hora: "",
+      fechahora: "",
+    
     },
     torneoAEliminar: null,
     busqueda: "",
@@ -70,8 +70,8 @@ class CRUDTorneo extends React.Component {
       modalInsertar: true,
       formInsertar: {
         nombre: "",
-        fecha: "",
-        hora: "",
+        fechahora: "",
+        
       },
     });
   };
@@ -175,9 +175,9 @@ class CRUDTorneo extends React.Component {
     const dataFiltrada = data.filter(
       (elemento) =>
         elemento.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        elemento.fecha.toLowerCase().includes(busqueda.toLowerCase()) ||
-        elemento.hora.toLowerCase().includes(busqueda.toLowerCase())
+        elemento.fechahora.toLowerCase().includes(busqueda.toLowerCase())    
     );
+
     this.setState({ dataFiltrada });
   };
 
@@ -230,8 +230,7 @@ class CRUDTorneo extends React.Component {
             <tr>
               <th>ID</th>
               <th>Nombre</th>
-              <th>Fecha</th>
-              <th>Hora</th>
+              <th>Fecha y Hora</th>
               <th>Acción</th>
             </tr>
           </thead>
@@ -241,8 +240,8 @@ class CRUDTorneo extends React.Component {
               <tr key={dato.id}>
                 <td>{dato.id}</td>
                 <td>{dato.nombre}</td>
-                <td>{dato.fecha}</td>
-                <td>{dato.hora}</td>
+                <td>{dato.fechahora}</td>
+                
                 <td>
                   <Button
                     color="primary"
@@ -281,25 +280,16 @@ class CRUDTorneo extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <label>Fecha:</label>
+              <label>Fecha y Hora:</label>
               <input
                 className="form-control"
-                name="fecha"
+                name="fechahora"
                 type="text"
                 onChange={this.handleChangeActualizar}
-                value={formActualizar.fecha}
+                value={formActualizar.fechahora}
               />
             </FormGroup>
-            <FormGroup>
-              <label>Hora:</label>
-              <input
-                className="form-control"
-                name="hora"
-                type="text"
-                onChange={this.handleChangeActualizar}
-                value={formActualizar.hora}
-              />
-            </FormGroup>
+            
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={() => this.editar()}>
@@ -329,23 +319,13 @@ class CRUDTorneo extends React.Component {
               />
             </FormGroup>
             <FormGroup>
-              <label>Fecha:</label>
+              <label>Fecha y Hora:</label>
               <input
                 className="form-control"
-                name="fecha"
+                name="fechahora"
                 type="text"
                 onChange={this.handleChangeInsertar}
-                value={formInsertar.fecha}
-              />
-            </FormGroup>
-            <FormGroup>
-              <label>Hora:</label>
-              <input
-                className="form-control"
-                name="hora"
-                type="text"
-                onChange={this.handleChangeInsertar}
-                value={formInsertar.hora}
+                value={formInsertar.fechahora}
               />
             </FormGroup>
           </ModalBody>

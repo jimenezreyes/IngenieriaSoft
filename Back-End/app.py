@@ -25,7 +25,7 @@ from model.model_administrador import get_admin_by_email, get_all_admins, get_ad
 from model.model_superadmin import get_superadmin_by_email
 from model.model_participante import get_participante_by_email
  
-from model.model_torneo import get_all_torneos, get_torneo_by_id, get_current_date, get_current_time
+from model.model_torneo import get_all_torneos, get_torneo_by_id,get_current_datetime
 
 def get_user_by_email(email):
     participante_query = get_participante_by_email(email)
