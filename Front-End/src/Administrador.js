@@ -10,7 +10,7 @@ function Administrador() {
     };
 
     return (
-        <div>
+        <div className='Administrador'>
             <h1>¡Bienvenido Administrador!</h1>
             <button onClick={handleLogout}>Cerrar Sesión</button>
         </div>

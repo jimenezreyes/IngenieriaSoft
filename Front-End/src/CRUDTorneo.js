@@ -192,7 +192,7 @@ class CRUDTorneo extends React.Component {
     } = this.state;
 
     return (
-      <Container>
+      <Container className="CRUDTorneo">
         <br />
         <div className="d-flex justify-content-between">
           <Button

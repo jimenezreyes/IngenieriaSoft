@@ -214,7 +214,7 @@ class CRUDAdmin extends React.Component {
   render() {
     return (
       <>
-        <Container>
+        <Container className="CRUDAdmin">
           <br />
           <div className="d-flex justify-content-between">
               <Button style={{ marginRight: '10px' }}  color="success" onClick={() => this.mostrarModalInsertar()}>Nuevo administrador</Button>

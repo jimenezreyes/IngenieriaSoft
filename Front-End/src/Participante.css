@@ -1,8 +1,6 @@
 /* Participante.css */
 
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f7f7f7;
+.Participante .body {   
     margin: 0;
     padding: 0;
     display: flex;
@@ -11,29 +9,14 @@ body {
     height: 100vh;
   }
   
-  .container {
+  .Participante .container {
     text-align: center;
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  } 
+  .Participante{
+  margin-bottom: 20px;
   }
-  
-  h1 {
-    color: #007bff;
-  }
-  
-  button {
-    background-color: #007bff;
-    color: #ffffff;
-    border: none;
-    border-radius: 4px;
-    padding: 10px 20px;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
+ 

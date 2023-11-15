@@ -10,7 +10,7 @@ function Participante() {
     };
 
     return (
-        <div>
+        <div className="Participante">
             <h1>¡Bienvenido Participante!</h1>
             <button onClick={handleLogout}>Cerrar Sesión</button>
         </div>

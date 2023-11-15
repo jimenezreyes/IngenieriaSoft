@@ -11,7 +11,7 @@ function Superadmin() {
     };
 
     return (
-        <div>
+        <div className='SuperAdmin'>
             <h1>¡Hola, superadmin!</h1>
             <CRUDAdmin />
             <button onClick={handleLogout}>Cerrar Sesión</button>

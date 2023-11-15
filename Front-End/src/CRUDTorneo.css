@@ -2,7 +2,7 @@
   text-align: center;
 }
 
-.CRUDTorneo-header {
+.CRUDTorneo .CRUDTorneo-header {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
@@ -13,22 +13,22 @@
   color: white;
 }
 
-.CRUDTorneo-link {
+.CRUDTorneo .CRUDTorneo-link {
   color: #61dafb;
 }
 
-.textField {
+.CRUDTorneo .textField {
   height: 32px;
   width: 200px;
   border: 1px solid #e5e5e5;
   padding: 0 32px 0 16px;
 }
 
-.textField:hover {
+.CRUDTorneo .textField:hover {
   cursor: pointer;
 }
 
-.btnBuscar {
+.CRUDTorneo .btnBuscar {
   height: 34px;
   width: 32px;
   text-align: center;
@@ -36,7 +36,7 @@
   justify-content: center;
 }
 
-.barraBusqueda {
+.CRUDTorneo .barraBusqueda {
   float: right;
   padding: 20px;
 }

@@ -11,13 +11,13 @@
     font-family: Georgia, serif; 
   }
   
-  .Content {
+  .TopBar .Content {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
   
-  .Content img {
+  .TopBar .Content img {
     height: 35px;
     margin-right: 40px;
   }
