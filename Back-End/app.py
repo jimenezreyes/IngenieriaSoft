@@ -65,21 +65,19 @@ def main():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return jsonify({"message": "registro con flask"})
-    # if request.method == 'POST':
-    #     nombre = request.form['nombre']
-    #     apellido = request.form['apellido']
-    #     correo = request.form['correo']
-    #     psswd = request.form['password']
-    #     try:
-    #         participante = Participante(nombre, apellido, correo, psswd)
-    #         db.session.add(participante)
-    #         db.session.commit()
-    #     except Exception as e:
-    #         db.session.rollback()  # Revertir cambios en caso de error
-    #         print(f"Error: {str(e)}")
-    # #return render_template('register.html')
-    # return jsonify({'message':'Registro exitoso'})
+    if request.method == 'POST':
+        nombre = request.json['nombre']
+        apellido = request.json['apellido']
+        correo = request.json['correo']
+        psswd = request.json['password']
+        try:
+            participante = Participante(nombre, apellido, correo, psswd)
+            db.session.add(participante)
+            db.session.commit()
+        except Exception as e:
+            db.session.rollback()  # Revertir cambios en caso de error
+            print(f"Error: {str(e)}")       
+    return jsonify({'message':'Registro exitoso'})
 
 
 @app.route("/login", methods=["GET", "POST"])
