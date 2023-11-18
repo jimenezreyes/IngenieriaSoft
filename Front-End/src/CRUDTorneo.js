@@ -1,16 +1,9 @@
 import React from "react";
 import "./CRUDTorneo.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {
-  Table,
-  Button,
-  Container,
-  Modal,
-  ModalHeader,
-  ModalBody,
-  FormGroup,
-  ModalFooter,
-} from "reactstrap";
+import { Table, Button, Container, Modal, ModalHeader, ModalBody, FormGroup, ModalFooter } from "reactstrap";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class CRUDTorneo extends React.Component {
   state = {
@@ -19,35 +12,29 @@ class CRUDTorneo extends React.Component {
     modalActualizar: false,
     modalInsertar: false,
     modalEliminar: false,
+    torneoAEliminar: "",
     formInsertar: {
       nombre: "",
-      fechahora: "",
-      
+      fechahora: new Date(),
     },
     formActualizar: {
-      id: null,
+      id: "",
       nombre: "",
-      fechahora: "",
-    
+      fechahora: new Date(),
     },
-    torneoAEliminar: null,
     busqueda: "",
   };
 
   componentDidMount() {
-    this.obtenerTorneos();
-  }
-
-  obtenerTorneos = () => {
     fetch("http://127.0.0.1:5000/torneo/readtorneos")
       .then((response) => response.json())
       .then((data) => {
-        this.setState({ data, dataFiltrada: data });
+        this.setState({ data: data, dataFiltrada: data });
       })
       .catch((error) => {
         alert("Error al obtener datos del servidor:", error);
       });
-  };
+  }
 
   mostrarTodosTorneos = () => {
     // Realiza la redirección a la nueva página
@@ -56,7 +43,7 @@ class CRUDTorneo extends React.Component {
 
   mostrarModalActualizar = (dato) => {
     this.setState({
-      formActualizar: { ...dato },
+      formActualizar: dato,
       modalActualizar: true,
     });
   };
@@ -68,16 +55,15 @@ class CRUDTorneo extends React.Component {
   mostrarModalInsertar = () => {
     this.setState({
       modalInsertar: true,
-      formInsertar: {
-        nombre: "",
-        fechahora: "",
-        
-      },
     });
   };
 
   cerrarModalInsertar = () => {
     this.setState({ modalInsertar: false });
+  };
+
+  cerrarModalActualizar = () => {
+    this.setState({ modalActualizar: false });
   };
 
   mostrarModalEliminar = (dato) => {
@@ -92,63 +78,77 @@ class CRUDTorneo extends React.Component {
   };
 
   editar = () => {
-    const { formActualizar } = this.state;
-    fetch(`http://127.0.0.1:5000/torneo/updatetorneo/${formActualizar.id}`, {
+    const { id, nombre, fechahora } = this.state.formActualizar;
+    fetch(`http://127.0.0.1:5000/torneo/updatetorneo/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formActualizar),
+      body: JSON.stringify({ id, nombre, fechahora }),
     })
       .then((response) => response.json())
-      .then(() => {
-        this.obtenerTorneos();
-        this.cerrarModalActualizar();
+      .then((data) => {
+        console.log(data);
+        this.componentDidMount();
+        this.setState({ modalActualizar: false });
       })
       .catch((error) => {
-        alert("Error al actualizar el torneo:", error);
+        console.error("Error al editar torneo:", error);
+        alert("Error al editar torneo. Por favor, inténtalo nuevamente más tarde.");
+        this.setState({ modalActualizar: false });
       });
   };
 
   eliminar = () => {
-    const { torneoAEliminar } = this.state;
-    fetch(`http://127.0.0.1:5000/torneo/deletetorneo/${torneoAEliminar}`, {
+    fetch(`http://127.0.0.1:5000/torneo/deletetorneo/${this.state.torneoAEliminar}`, {
       method: "DELETE",
     })
       .then(() => {
-        this.obtenerTorneos();
-        this.cerrarModalEliminar();
+        this.componentDidMount();
+        this.setState({ modalEliminar: false, torneoAEliminar: null });
       })
       .catch((error) => {
-        alert("Error al eliminar el torneo:", error);
+        console.error("Error al eliminar torneo:", error);
+        alert("Error al eliminar torneo. Por favor, inténtalo más tarde.");
       });
   };
 
   insertar = () => {
-    const { formInsertar } = this.state;
-    fetch("http://127.0.0.1:5000/torneo/createtorneo", {
+    const { nombre, fechahora } = this.state.formInsertar;
+    fetch("http://127.0.0.1:5000/torneo/inserttorneo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formInsertar),
+      body: JSON.stringify({ nombre, fechahora }),
     })
       .then((response) => response.json())
-      .then(() => {
-        this.obtenerTorneos();
-        this.cerrarModalInsertar();
+      .then((data) => {
+        console.log(data);
+        this.setState({ modalInsertar: false });
+        this.componentDidMount();
       })
       .catch((error) => {
-        alert("Error al insertar el torneo:", error);
+        console.error("Error al insertar torneo:", error);
+        alert("Error al insertar torneo. Por favor, inténtalo nuevamente más tarde.");
+        this.setState({ modalInsertar: false });
       });
   };
 
   handleChangeInsertar = (e) => {
-    const { name, value } = e.target;
+    this.setState({
+      formInsertar: {
+        ...this.state.formInsertar,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
+  handleChangeFechaInsertar = (date) => {
     this.setState((prevState) => ({
       formInsertar: {
         ...prevState.formInsertar,
-        [name]: value,
+        fechahora: date,
       },
     }));
   };
@@ -163,106 +163,81 @@ class CRUDTorneo extends React.Component {
     }));
   };
 
-  handleChangeBuscar = (e) => {
-    const { value } = e.target;
-    this.setState({ busqueda: value }, () => {
-      this.filtrarElementos();
-    });
+  handleChangeBuscar = async (e) => {
+    e.persist();
+    await this.setState({ busqueda: e.target.value });
+    this.filtrarElementos();
   };
 
   filtrarElementos = () => {
-    const { data, busqueda } = this.state;
-    const dataFiltrada = data.filter(
+    const dataFiltrada = this.state.data.filter(
       (elemento) =>
-        elemento.nombre.toLowerCase().includes(busqueda.toLowerCase()) ||
-        elemento.fechahora.toLowerCase().includes(busqueda.toLowerCase())    
+        elemento.nombre.toLowerCase().includes(this.state.busqueda.toLowerCase()) ||
+        elemento.fechahora.toLowerCase().includes(this.state.busqueda.toLowerCase())
     );
-
-    this.setState({ dataFiltrada });
+    this.setState({ data: dataFiltrada });
   };
 
   render() {
-    const {
-      dataFiltrada,
-      modalActualizar,
-      modalInsertar,
-      modalEliminar,
-      formInsertar,
-      formActualizar,
-    } = this.state;
-
     return (
-      <Container className="CRUDTorneo">
-        <br />
-        <div className="d-flex justify-content-between">
-          <Button
-            style={{ marginRight: '10px' }}
-            color="success"
-            onClick={() => this.mostrarModalInsertar()}
-          >
-            Nuevo Torneo
-          </Button>
-          <Button
-            style={{ marginRight: '10px' }}
-            color="success"
-            onClick={() => this.mostrarTodosTorneos()}
-          >
-            Ver Torneos Actuales
-          </Button>
-        </div>
-        <div className="barraBusqueda">
-          <input
-            type="text"
-            placeholder="Buscar"
-            className="textField"
-            name="busqueda"
-            value={this.state.busqueda}
-            onChange={this.handleChangeBuscar}
-          />
-          <Button className="btnBuscar" color="primary">
-            Buscar
-          </Button>
-        </div>
-        <br />
-        <br />
-        <Table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Fecha y Hora</th>
-              <th>Acción</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {dataFiltrada.map((dato) => (
-              <tr key={dato.id}>
-                <td>{dato.id}</td>
-                <td>{dato.nombre}</td>
-                <td>{dato.fechahora}</td>
-                
-                <td>
-                  <Button
-                    color="primary"
-                    onClick={() => this.mostrarModalActualizar(dato)}
-                  >
-                    Editar
-                  </Button>{" "}
-                  <Button
-                    color="danger"
-                    onClick={() => this.mostrarModalEliminar(dato)}
-                  >
-                    Eliminar
-                  </Button>
-                </td>
+      <>
+        <Container className="CRUDTorneo">
+          <br />
+          <div className="d-flex justify-content-between">
+            <Button style={{ marginRight: "10px" }} color="success" onClick={() => this.mostrarModalInsertar()}>
+              Nuevo Torneo
+            </Button>
+            <Button style={{ marginRight: "10px" }} color="success" onClick={() => this.mostrarTodosTorneos()}>
+              Ver Torneos Actuales
+            </Button>
+          </div>
+          <div className="barraBusqueda">
+            <input
+              type="text"
+              placeholder="Buscar"
+              className="textField"
+              name="busqueda"
+              value={this.state.busqueda}
+              onChange={this.handleChangeBuscar}
+            />
+            <Button className="btnBuscar" color="primary">
+              Buscar
+            </Button>
+          </div>
+          <br />
+          <br />
+          <Table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Fecha y Hora</th>
+                <th>Acción</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
 
-        {/* ... Modales ... */}
-        <Modal isOpen={modalActualizar}>
+            <tbody>
+              {this.state.data.map((dato) => (
+                <tr key={dato.id}>
+                  <td>{dato.id}</td>
+                  <td>{dato.nombre}</td>
+                  <td>{dato.fechahora}</td>
+
+                  <td>
+                    <Button color="primary" onClick={() => this.mostrarModalActualizar(dato)}>
+                      Editar
+                    </Button>{" "}
+                    <Button color="danger" onClick={() => this.mostrarModalEliminar(dato)}>
+                      Eliminar
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </Container>
+
+        <Modal isOpen={this.state.modalActualizar}>
           <ModalHeader>
             <div>
               <h3>Actualizar Torneo</h3>
@@ -276,20 +251,21 @@ class CRUDTorneo extends React.Component {
                 name="nombre"
                 type="text"
                 onChange={this.handleChangeActualizar}
-                value={formActualizar.nombre}
+                value={this.state.formActualizar.nombre}
               />
             </FormGroup>
             <FormGroup>
               <label>Fecha y Hora:</label>
-              <input
+              <DatePicker
                 className="form-control"
-                name="fechahora"
-                type="text"
-                onChange={this.handleChangeActualizar}
-                value={formActualizar.fechahora}
+                selected={new Date(this.state.formActualizar.fechahora)}
+                onChange={(date) => this.handleChangeFechaInsertar(date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="yyyy-MM-dd HH:mm:ss"
               />
             </FormGroup>
-            
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={() => this.editar()}>
@@ -301,7 +277,7 @@ class CRUDTorneo extends React.Component {
           </ModalFooter>
         </Modal>
 
-        <Modal isOpen={modalInsertar}>
+        <Modal isOpen={this.state.modalInsertar}>
           <ModalHeader>
             <div>
               <h3>Insertar Torneo</h3>
@@ -315,17 +291,18 @@ class CRUDTorneo extends React.Component {
                 name="nombre"
                 type="text"
                 onChange={this.handleChangeInsertar}
-                value={formInsertar.nombre}
               />
             </FormGroup>
             <FormGroup>
               <label>Fecha y Hora:</label>
-              <input
+              <DatePicker
                 className="form-control"
-                name="fechahora"
-                type="text"
-                onChange={this.handleChangeInsertar}
-                value={formInsertar.fechahora}
+                selected={this.state.formInsertar.fechahora}
+                onChange={(date) => this.handleChangeFechaInsertar(date)}
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                dateFormat="yyyy-MM-dd HH:mm:ss"
               />
             </FormGroup>
           </ModalBody>
@@ -339,7 +316,7 @@ class CRUDTorneo extends React.Component {
           </ModalFooter>
         </Modal>
 
-        <Modal isOpen={modalEliminar}>
+        <Modal isOpen={this.state.modalEliminar}>
           <ModalHeader>
             <div>
               <h3>Eliminar Torneo</h3>
@@ -357,9 +334,11 @@ class CRUDTorneo extends React.Component {
             </Button>
           </ModalFooter>
         </Modal>
-      </Container>
+      </>
     );
   }
 }
 
 export default CRUDTorneo;
+
+

@@ -30,7 +30,8 @@ def insert_torneo():
         fecha_hora_actual= datetime.now()
         id_administrador = datos_json["idAdministrador"]
 
-        nuevo_torneo = Torneo(fecha, nombre, hora, id_administrador)
+        nuevo_torneo = Torneo( nombre, fecha_hora_actual, id_administrador)
+
         try:
             db.session.add(nuevo_torneo)
             db.session.commit()
@@ -45,13 +46,13 @@ def update_torneo():
         datos_json = request.get_json()
         id_torneo = datos_json["id"]
         nombre = datos_json["nombre"]
-        fecha_hora_actual = datetime.now()
+        fecha_actual = datetime.now()
         id_administrador = datos_json["idAdministrador"]
 
         torneo = get_torneo_by_id(id_torneo)
 
         torneo.nombre = nombre
-        torneo.fechahora = fecha_hora_actual
+        torneo.fechahora = fecha_actual
         torneo.idAdministrador = id_administrador
 
         try:
