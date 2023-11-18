@@ -41,10 +41,11 @@ def insert_admin():
 def update_admin():
     if request.method == "PUT":
         datos_json = request.get_json()
+        id = datos_json["id"]
         nombre = datos_json["nombre"]
         apellido = datos_json["apellido"]
         email = datos_json["email"]
-        admin = get_admin_by_email(email)
+        admin = get_admin_by_id(id)
     
         admin.nombre = nombre
         admin.apellido = apellido

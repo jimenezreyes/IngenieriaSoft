@@ -27,6 +27,7 @@ class CRUDAdmin extends React.Component {
       psswd: "",
     },
     formActualizar: {
+      id: "",
       nombre: "",
       apellido: "",
       email: "",
@@ -49,7 +50,7 @@ class CRUDAdmin extends React.Component {
     // Realiza la redirección a la nueva página
     window.location.href = "http://localhost:5000/torneo/readtorneos";
   };
-  
+
 
   mostrarModalActualizar = (dato) => {
     this.setState({
@@ -72,7 +73,7 @@ class CRUDAdmin extends React.Component {
     this.setState({ modalInsertar: false });
   };
 
- 
+
   cerrarModalActualizar = () => {
     this.setState({ modalActualizar: false });
   }
@@ -80,28 +81,29 @@ class CRUDAdmin extends React.Component {
   mostrarModalEliminar = (dato) => {
     this.setState({
       modalEliminar: true,
-      administradorAEliminar : dato.id
+      administradorAEliminar: dato.id
     });
   }
-  
+
 
   cerrarModalEliminar = () => {
     this.setState({ modalEliminar: false });
   }
 
-  
+
   editar = () => {
-    const { nombre, apellido, email } = this.state.formActualizar;
+    const { id, nombre, apellido, email } = this.state.formActualizar;
     fetch("http://127.0.0.1:5000/admin/updateadmin", {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ nombre, apellido, email }),
+      body: JSON.stringify({ id, nombre, apellido, email }),
     })
       .then(response => response.json())
       .then(data => {
         console.log(data);
+        this.componentDidMount();
         this.setState({ modalActualizar: false });
       })
       .catch(error => {
@@ -112,13 +114,13 @@ class CRUDAdmin extends React.Component {
   };
 
   eliminar = (dato) => {
-      fetch("http://127.0.0.1:5000/admin/deleteadmin", {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ idAdministrador: dato.id }),
-      })
+    fetch("http://127.0.0.1:5000/admin/deleteadmin", {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ idAdministrador: dato.id }),
+    })
       .then(response => response.json())
       .then(data => {
         console.log(data);
@@ -133,7 +135,7 @@ class CRUDAdmin extends React.Component {
         console.error("Error al eliminar administrador:", error);
         alert("Error al eliminar administrador. Por favor, inténtalo más tarde.");
       });
-    };
+  };
 
   // const res = await fetch(`http://127.0.0.1:5000/login`, {
   //       method: 'POST',
@@ -200,10 +202,10 @@ class CRUDAdmin extends React.Component {
 
   filtrarElementos = () => {
     var search = this.state.dataFiltrada.filter(item => {
-      if(item.id.toString().includes(this.state.busqueda) ||
-      item.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(this.state.busqueda.toLowerCase()) ||
-      item.apellido.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(this.state.busqueda.toLowerCase()) ||
-      item.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,"").includes(this.state.busqueda.toLowerCase())){
+      if (item.id.toString().includes(this.state.busqueda) ||
+        item.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").includes(this.state.busqueda.toLowerCase()) ||
+        item.apellido.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").includes(this.state.busqueda.toLowerCase()) ||
+        item.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").includes(this.state.busqueda.toLowerCase())) {
         return item;
       }
     });
@@ -217,10 +219,11 @@ class CRUDAdmin extends React.Component {
         <Container className="CRUDAdmin">
           <br />
           <div className="d-flex justify-content-between">
-              <Button style={{ marginRight: '10px' }}  color="success" onClick={() => this.mostrarModalInsertar()}>Nuevo administrador</Button>
-              <Button style={{ marginRight: '10px' }}  color="success" onClick={() => this.mostrarTodosTorneos()}>Ver Torneos Actuales</Button>
+            <Button style={{ marginRight: '10px' }} color="success" onClick={() => this.mostrarModalInsertar()}>Nuevo administrador</Button>
+            <Button style={{ marginRight: '10px' }} color="success" onClick={() => this.mostrarTodosTorneos()}>Ver Torneos Actuales</Button>
           </div>
           <div className="barraBusqueda">
+            <img src="lupa.png" alt="Ícono de búsqueda" style={{ height: '26px' }}/>{" "}
             <input
               type="text"
               placeholder="Buscar"
@@ -229,7 +232,6 @@ class CRUDAdmin extends React.Component {
               value={this.state.busqueda}
               onChange={this.handleChangeBuscar}
             />
-            <Button className="btnBuscar" color="primary">Buscar</Button>
           </div>
           <br />
           <br />
@@ -306,9 +308,10 @@ class CRUDAdmin extends React.Component {
               <input
                 className="form-control"
                 name="email"
-                type="text"
+                type="email"
                 onChange={this.handleChangeActualizar}
                 value={this.state.formActualizar.email}
+                required
               />
             </FormGroup>
           </ModalBody>
@@ -367,8 +370,9 @@ class CRUDAdmin extends React.Component {
               <input
                 className="form-control"
                 name="email"
-                type="text"
+                type="email"
                 onChange={this.handleChangeInsertar}
+                required
               />
             </FormGroup>
 
@@ -404,21 +408,21 @@ class CRUDAdmin extends React.Component {
         <Modal isOpen={this.state.modalEliminar}>
           <ModalHeader>
             <div><h3>Eliminar Administrador</h3></div>
-            </ModalHeader>
-            <ModalBody>
-              <p>¿Esta seguro que quiere eliminar 
-                el administrador con id: {this.state.administradorAEliminar}?
-              </p>
-            </ModalBody>
-            
-            <ModalFooter>
-              <Button color="danger" onClick={() => this.eliminar({id: this.state.administradorAEliminar})}>
-                Confirmar
-                </Button>
-                <Button color="secondary" onClick={() => this.setState({ modalEliminar: false, administradorAEliminar: null })}>
-                Cancelar
-                </Button>
-            </ModalFooter>
+          </ModalHeader>
+          <ModalBody>
+            <p>¿Esta seguro que quiere eliminar
+              el administrador con id: {this.state.administradorAEliminar}?
+            </p>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button color="danger" onClick={() => this.eliminar({ id: this.state.administradorAEliminar })}>
+              Confirmar
+            </Button>
+            <Button color="secondary" onClick={() => this.setState({ modalEliminar: false, administradorAEliminar: null })}>
+              Cancelar
+            </Button>
+          </ModalFooter>
         </Modal>
       </>
     );
