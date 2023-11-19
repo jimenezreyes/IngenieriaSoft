@@ -15,7 +15,7 @@ def read_torneos():
         torneo_data = {
             "id": torneo.idTorneo,
             "nombre": torneo.nombre,
-            "fechahora": torneo.fechahora.strftime("%Y-%m-%d %H:%M:%S"),
+            "fechahora": torneo.fechaHora.strftime("%Y-%m-%d %H:%M:%S"),
             "idAdministrador": torneo.idAdministrador,
         }
         torneos_list.append(torneo_data)
@@ -27,10 +27,10 @@ def insert_torneo():
     if request.method == "POST":
         datos_json = request.get_json()
         nombre = datos_json["nombre"]
-        fechahora= datetime.now()
-        id_administrador = datos_json["idAdministrador"]
+        fechaHora= datetime.now()
+        idAdministrador = datos_json["idAdministrador"]
 
-        nuevo_torneo = Torneo( nombre, fechahora, id_administrador)
+        nuevo_torneo = Torneo( nombre, fechaHora, idAdministrador)
 
         try:
             db.session.add(nuevo_torneo)
@@ -47,13 +47,13 @@ def update_torneo():
         id_torneo = datos_json["id"]
         nombre = datos_json["nombre"]
         fecha_actual = datetime.now()
-        id_administrador = datos_json["idAdministrador"]
+        idAdministrador = datos_json["idAdministrador"]
 
         torneo = get_torneo_by_id(id_torneo)
 
         torneo.nombre = nombre
-        torneo.fechahora = fecha_actual
-        torneo.idAdministrador = id_administrador
+        torneo.fechaHora = fecha_actual
+        torneo.idAdministrador = idAdministrador
 
         try:
             db.session.commit()

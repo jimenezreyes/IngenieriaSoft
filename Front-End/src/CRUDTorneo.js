@@ -1,5 +1,5 @@
 //import React from "react";
-import React, { useState } from 'react';
+import React from "react";
 import "./CRUDTorneo.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button, Container, Modal, ModalHeader, ModalBody, FormGroup, ModalFooter } from "reactstrap";
@@ -268,7 +268,7 @@ class CRUDTorneo extends React.Component {
               <label>Fecha y Hora:</label>
               <DatePicker
                 className="form-control"
-                selected={new Date(this.state.formActualizar.fechahora)}
+                selected={this.state.formActualizar.fechahora}
                 onChange={(date) => this.handleChangeFechaInsertar(date)}
                 showTimeSelect
                 timeFormat="HH:mm"
