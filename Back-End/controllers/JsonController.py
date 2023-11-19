@@ -4,6 +4,7 @@ import json
 from model.model_administrador import get_all_admins
 from model.model_participante import get_all_participantes
 from model.model_superadmin import get_all_superadmins
+from model.model_torneo import get_all_torneos
 
 json_controller = Blueprint('json', __name__, url_prefix='/json')
 
@@ -33,7 +34,21 @@ def get_participantes():
             'gamerTag':participante.gamerTag
         })
     return json.dumps(response)
-
+    
+@json_controller.route('/torneos')
+def get_torneos():
+    try:
+        torneos = get_all_torneos()
+        response = []
+        for torneo in torneos:
+            response.append({
+                'id': torneo.id,
+                'nombre': torneo.nombre,
+                'fechahora': torneo.fechahora.strftime("%Y-%m-%d %H:%M:%S"),  # Formatear la fecha y hora
+                "idAdministrador": torneo.idAdministrador
+            })
+        return json.dumps(response)
+  
 # @json_controller.route('/movie_json')
 # def get_movie():
 #     nombre = request.json.get("nombre", None)

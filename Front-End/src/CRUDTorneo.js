@@ -1,9 +1,12 @@
-import React from "react";
+//import React from "react";
+import React, { useState } from 'react';
 import "./CRUDTorneo.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button, Container, Modal, ModalHeader, ModalBody, FormGroup, ModalFooter } from "reactstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+
+
 
 class CRUDTorneo extends React.Component {
   state = {
@@ -62,10 +65,6 @@ class CRUDTorneo extends React.Component {
     this.setState({ modalInsertar: false });
   };
 
-  cerrarModalActualizar = () => {
-    this.setState({ modalActualizar: false });
-  };
-
   mostrarModalEliminar = (dato) => {
     this.setState({
       modalEliminar: true,
@@ -79,7 +78,7 @@ class CRUDTorneo extends React.Component {
 
   editar = () => {
     const { id, nombre, fechahora } = this.state.formActualizar;
-    fetch(`http://127.0.0.1:5000/torneo/updatetorneo/${id}`, {
+    fetch("http://127.0.0.1:5000/torneo/updatetorneo", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -99,19 +98,30 @@ class CRUDTorneo extends React.Component {
       });
   };
 
-  eliminar = () => {
-    fetch(`http://127.0.0.1:5000/torneo/deletetorneo/${this.state.torneoAEliminar}`, {
-      method: "DELETE",
-    })
-      .then(() => {
+  eliminarTorneo = (dato) => {
+  fetch("http://127.0.0.1:5000/torneo/deletetorneo", {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ idTorneo: dato.id }),
+  })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      if (data.message) {
         this.componentDidMount();
         this.setState({ modalEliminar: false, torneoAEliminar: null });
-      })
-      .catch((error) => {
-        console.error("Error al eliminar torneo:", error);
-        alert("Error al eliminar torneo. Por favor, inténtalo más tarde.");
-      });
-  };
+      } else {
+        alert('Error al eliminar torneo en el servidor: ' + data.error);
+      }
+    })
+    .catch(error => {
+      console.error("Error al eliminar torneo:", error);
+      alert("Error al eliminar torneo. Por favor, inténtalo más tarde.");
+    });
+};
+
 
   insertar = () => {
     const { nombre, fechahora } = this.state.formInsertar;
@@ -128,12 +138,12 @@ class CRUDTorneo extends React.Component {
         this.setState({ modalInsertar: false });
         this.componentDidMount();
       })
-      .catch((error) => {
+      .catch(error => {
         console.error("Error al insertar torneo:", error);
         alert("Error al insertar torneo. Por favor, inténtalo nuevamente más tarde.");
         this.setState({ modalInsertar: false });
       });
-  };
+  }
 
   handleChangeInsertar = (e) => {
     this.setState({

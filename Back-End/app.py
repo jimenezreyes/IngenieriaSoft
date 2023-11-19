@@ -4,6 +4,7 @@ import os
 from alchemyClasses import db
 from alchemyClasses.Participante import Participante
 from alchemyClasses.Administrador import Administrador
+from alchemyClasses.Torneo import Torneo
 from CryptoUtils.CryptoUtils import validate
 from flask import (
     Flask,
