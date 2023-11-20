@@ -6,6 +6,7 @@ import BottomBar from "./BottomBar";
 import Participante from "./Participante";
 import Administrador from './Administrador';
 import Superadmin from './Superadmin';
+import VistaTorneos from './VistaTorneos';
 import "./App.css";
 
 
@@ -20,6 +21,7 @@ function App() {
             <Route path="participante" element={<Participante />} />
             <Route path="administrador" element={<Administrador />} />
             <Route path="superadmin" element={<Superadmin />} />
+            <Route path="vistaTorneos" element={<VistaTorneos/>} />
         </Routes> 
         <BottomBar />      
     </div>  

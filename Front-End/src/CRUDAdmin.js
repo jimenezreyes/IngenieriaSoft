@@ -48,7 +48,7 @@ class CRUDAdmin extends React.Component {
 
   mostrarTodosTorneos = () => {
     // Realiza la redirección a la nueva página
-    window.location.href = "http://localhost:5000/torneo/readtorneos";
+    window.location.href = "http://localhost:3000/vistaTorneos";
   };
 
 
@@ -72,11 +72,6 @@ class CRUDAdmin extends React.Component {
   cerrarModalInsertar = () => {
     this.setState({ modalInsertar: false });
   };
-
-
-  cerrarModalActualizar = () => {
-    this.setState({ modalActualizar: false });
-  }
 
   mostrarModalEliminar = (dato) => {
     this.setState({
@@ -202,16 +197,16 @@ class CRUDAdmin extends React.Component {
 
   filtrarElementos = () => {
     var search = this.state.dataFiltrada.filter(item => {
-      if (item.id.toString().includes(this.state.busqueda) ||
+      return (
+        item.id.toString().includes(this.state.busqueda) ||
         item.nombre.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").includes(this.state.busqueda.toLowerCase()) ||
         item.apellido.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").includes(this.state.busqueda.toLowerCase()) ||
-        item.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").includes(this.state.busqueda.toLowerCase())) {
-        return item;
-      }
+        item.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, "").includes(this.state.busqueda.toLowerCase())
+      );
     });
     this.setState({ data: search });
   }
-
+  
 
   render() {
     return (
