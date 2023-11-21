@@ -44,15 +44,18 @@ def insert_torneo():
 def update_torneo():
     if request.method == "PUT":
         datos_json = request.get_json()
-        id_torneo = datos_json["id"]
+        id = datos_json["id"]
         nombre = datos_json["nombre"]
-        fecha_actual = datetime.now()
-        idAdministrador = datos_json["idAdministrador"]
+        fecha_hora_str = datos_json["fechahora"]
 
-        torneo = get_torneo_by_id(id_torneo)
+        idAdministrador = datos_json["idAdministrador"]
+        torneo = get_torneo_by_id(id)
+
+        #Cambiar la fecha a un objeto datetime
+        fecha_hora = datetime.strptime(fecha_hora_str,"%Y-%m-%d %H:%M:%S")
 
         torneo.nombre = nombre
-        torneo.fechaHora = fecha_actual
+        torneo.fechaHora = fecha_hora
         torneo.idAdministrador = idAdministrador
 
         try:
@@ -66,7 +69,7 @@ def update_torneo():
 def delete_torneo():
     if request.method == "DELETE":
         datos_json = request.get_json()
-        id_torneo = datos_json.get("id")  
+        id_torneo = datos_json.get("idTorneo")  
         torneo = get_torneo_by_id(id_torneo)
 
         if not torneo:

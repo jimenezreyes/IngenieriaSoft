@@ -79,12 +79,14 @@ class CRUDTorneo extends React.Component {
 
   editar = () => {
     const { id, nombre, fechahora } = this.state.formActualizar;
+    const fechaFormateada = fechahora.toISOString().substr(0,19);
+
     fetch("http://127.0.0.1:5000/torneo/updatetorneo", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id, nombre, fechahora }),
+      body: JSON.stringify({ id, nombre, fechahora: fechaFormateada}),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -99,7 +101,7 @@ class CRUDTorneo extends React.Component {
       });
   };
 
-  eliminarTorneo = (dato) => {
+  eliminar = (dato) => {
   fetch("http://127.0.0.1:5000/torneo/deletetorneo", {
     method: 'DELETE',
     headers: {
