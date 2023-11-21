@@ -41,7 +41,8 @@ class CRUDTorneo extends React.Component {
 
   mostrarTodosTorneos = () => {
     // Realiza la redirección a la nueva página
-    window.location.href = "http://localhost:5000/torneo/readtorneos";
+    window.location.href = "http://localhost:3000/vistaTorneos";
+    //window.location.href = "http://localhost:5000/torneo/readtorneos";
   };
 
   mostrarModalActualizar = (dato) => {
@@ -125,12 +126,13 @@ class CRUDTorneo extends React.Component {
 
   insertar = () => {
     const { nombre, fechahora } = this.state.formInsertar;
+    const idAdministrador=1;
     fetch("http://127.0.0.1:5000/torneo/inserttorneo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nombre, fechahora }),
+      body: JSON.stringify({ nombre, fechahora, idAdministrador}),
     })
       .then((response) => response.json())
       .then((data) => {

@@ -28,7 +28,7 @@ def insert_torneo():
         datos_json = request.get_json()
         nombre = datos_json["nombre"]
         fechaHora= datetime.now()
-        idAdministrador = datos_json["idAdministrador"]
+        idAdministrador = datos_json.get("idAdministrador")
 
         nuevo_torneo = Torneo( nombre, fechaHora, idAdministrador)
 
