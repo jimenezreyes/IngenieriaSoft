@@ -125,8 +125,8 @@ class CRUDTorneo extends React.Component {
 
 
   insertar = () => {
-    const { nombre, fechahora } = this.state.formInsertar;
-    const idAdministrador=1;
+    const { nombre, fechahora, idAdministrador } = this.state.formInsertar;
+    
     fetch("http://127.0.0.1:5000/torneo/inserttorneo", {
       method: "POST",
       headers: {
