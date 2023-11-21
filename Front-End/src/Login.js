@@ -48,7 +48,7 @@ function Login() {
 
   return (
     <div className="Login">
-      <h1>Iniciar Sesión</h1>
+      <h1>Bienvenido</h1>
       <form>
         <div className="form-group">
           <label htmlFor="email">Dirección de email:</label>
@@ -71,7 +71,7 @@ function Login() {
         <nav>
           <ul>
             <li>
-              <button type="button" onClick={handleLogin}> Iniciar Sesión </button>
+              <button type="button" onClick={handleLogin}> Iniciar sesión </button>
             </li>
             <li>
               <button type="button" onClick={handleRegistrar}>Registrar nuevo usuario</button>

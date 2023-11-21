@@ -8,6 +8,8 @@ function Register() {
   const [correo, setCorreo] = useState('');
   const [contrasena, setContrasena] = useState('');
 
+  const navigate = useNavigate();
+
   const handleRegistro = async (e) => {
     e.preventDefault();
 
@@ -21,17 +23,32 @@ function Register() {
 
     console.log('Datos de registro:', datosRegistro);
     // Luego, puedes realizar una solicitud al servidor para manejar el registro.
-    const res = await fetch(`http://127.0.0.1:5000/register`,{
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify(datosRegistro)
-    });
-    const data = await res.json();
-  };
-
-  const navigate = useNavigate();
+    try {
+      // Realizar una solicitud al servidor para manejar el registro.
+      const res = await fetch(`http://127.0.0.1:5000/register`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(datosRegistro),
+      });
+  
+      const data = await res.json();
+      console.log(data);
+      // Verificar si el registro fue exitoso
+      if (data.message == 'Registro exitoso') {
+        // Redirigir a la vista EditProfile
+        navigate('/editarPerfil');
+      } else {
+        // Manejar otros casos según sea necesario
+        console.log('Error en el registro:', data.error);
+        // Puedes mostrar mensajes de error, etc.
+      }
+    } catch (error) {
+      console.error('Error al enviar datos al servidor:', error);
+      // Puedes manejar los errores y proporcionar retroalimentación al usuario si es necesario
+    }
+  };  
 
   const handleClick = () => {
     navigate(-1); // Navegar hacia atrás
