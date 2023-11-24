@@ -52,7 +52,8 @@ def update_torneo():
         torneo = get_torneo_by_id(id)
 
         #Cambiar la fecha a un objeto datetime
-        fecha_hora = datetime.strptime(fecha_hora_str,"%Y-%m-%d %H:%M:%S")
+        fecha_hora = datetime.strptime(fecha_hora_str, "%Y-%m-%dT%H:%M:%S")
+
 
         torneo.nombre = nombre
         torneo.fechaHora = fecha_hora

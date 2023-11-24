@@ -28,6 +28,7 @@ class CRUDTorneo extends React.Component {
     busqueda: "",
   };
 
+
   componentDidMount() {
     fetch("http://127.0.0.1:5000/torneo/readtorneos")
       .then((response) => response.json())
@@ -46,11 +47,20 @@ class CRUDTorneo extends React.Component {
   };
 
   mostrarModalActualizar = (dato) => {
-    this.setState({
-      formActualizar: dato,
-      modalActualizar: true,
-    });
+  const fechaFormateada = new Date(dato.fechahora);
+  const { id, nombre, fechahora, idAdministrador } = dato;
+  this.setState({
+    formActualizar: {
+      id,
+      nombre,
+      fechahora: fechaFormateada,
+      idAdministrador,
+    },
+    modalActualizar: true,
+  });
   };
+
+
 
   cerrarModalActualizar = () => {
     this.setState({ modalActualizar: false });
@@ -78,15 +88,18 @@ class CRUDTorneo extends React.Component {
   };
 
   editar = () => {
-    const { id, nombre, fechahora } = this.state.formActualizar;
-    const fechaFormateada = fechahora.toISOString().substr(0,19);
+    const { id, nombre, fechahora, idAdministrador } = this.state.formActualizar;
+    
+    const fechaFormateada = fechahora.toISOString().slice(0, 19);
+
+
 
     fetch("http://127.0.0.1:5000/torneo/updatetorneo", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id, nombre, fechahora: fechaFormateada}),
+      body: JSON.stringify({ id, nombre, fechahora: fechaFormateada, idAdministrador}),
     })
       .then((response) => response.json())
       .then((data) => {
