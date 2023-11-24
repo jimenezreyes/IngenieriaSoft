@@ -88,11 +88,8 @@ class CRUDTorneo extends React.Component {
   };
 
   editar = () => {
-    const { id, nombre, fechahora, idAdministrador } = this.state.formActualizar;
-    
+    const { id, nombre, fechahora, idAdministrador } = this.state.formActualizar; 
     const fechaFormateada = fechahora.toISOString().slice(0, 19);
-
-
 
     fetch("http://127.0.0.1:5000/torneo/updatetorneo", {
       method: "PUT",
@@ -179,6 +176,16 @@ class CRUDTorneo extends React.Component {
       },
     }));
   };
+
+  handleChangeFechaHoraActualizar = (date) => {
+    this.setState((prevState) => ({
+      formActualizar: {
+        ...prevState.formActualizar,
+        fechahora: new Date(date.setSeconds(0)), // Ajusta según tus necesidades
+      },
+    }));
+  };
+
 
   handleChangeActualizar = (e) => {
     const { name, value } = e.target;
@@ -286,7 +293,7 @@ class CRUDTorneo extends React.Component {
               <DatePicker
                 className="form-control"
                 selected={this.state.formActualizar.fechahora}
-                onChange={(date) => this.handleChangeFechaInsertar(date)}
+                onChange={(date) => this.handleChangeFechaHoraActualizar(date)}
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={15}
@@ -325,7 +332,7 @@ class CRUDTorneo extends React.Component {
               <DatePicker
                 className="form-control"
                 selected={this.state.formInsertar.fechahora}
-                onChange={(date) => this.handleChangeFechaInsertar(date)}
+                onChange={(date) => this.handleChangeFechaHoraActualizar(date)}
                 showTimeSelect
                 timeFormat="HH:mm"
                 timeIntervals={15}
