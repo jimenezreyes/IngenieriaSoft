@@ -6,14 +6,16 @@ class Torneo(db.Model):
     
     __tablename__ = 'torneo'
     idTorneo = Column(Integer, primary_key=True)
-    fechaHora = Column(DateTime())
     nombre = Column(String(100))
+    fechaHora = Column(DateTime())
+
     idAdministrador = Column(Integer, ForeignKey('administrador.idAdministrador'))
 
-    def __init__(self, fechaHora, nombre, idAdministrador):
-        self.fechaHora = fechaHora
+    def __init__(self,nombre,fechaHora, idAdministrador):
         self.nombre = nombre
+        self.fechaHora = fechaHora
+
         self.idAdministrador = idAdministrador
 
     def __str__(self):
-        return f'idTorneo: {self.idTorneo}, fechaHora: {self.fechaHora}, nombre: {self.nombre}, idAdministrador: {self.idAdministrador}'
+        return f'idTorneo: {self.idTorneo},nombre: {self.nombre}, fechaHora: {self.fechaHora}, idAdministrador: {self.idAdministrador}'

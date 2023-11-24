@@ -27,10 +27,12 @@ def insert_torneo():
     if request.method == "POST":
         datos_json = request.get_json()
         nombre = datos_json["nombre"]
-        fechaHora= datetime.now()
+        fecha_hora_str = datos_json["fechaHora"]
+        fecha_hora = datetime.strptime(fecha_hora_str, "%Y-%m-%dT%H:%M:%S.%fZ")
         idAdministrador = datos_json.get("idAdministrador")
 
-        nuevo_torneo = Torneo( nombre, fechaHora, idAdministrador)
+
+        nuevo_torneo = Torneo( nombre, fecha_hora, idAdministrador)
 
         try:
             db.session.add(nuevo_torneo)

@@ -19,6 +19,7 @@ class CRUDTorneo extends React.Component {
     formInsertar: {
       nombre: "",
       fechahora: new Date(),
+      idAdministrador: "",
     },
     formActualizar: {
       id: "",
@@ -138,13 +139,15 @@ class CRUDTorneo extends React.Component {
 
   insertar = () => {
     const { nombre, fechahora, idAdministrador } = this.state.formInsertar;
-    
+    const fechaFormateada = fechahora.toISOString().slice(0,19);
+    console.log("fecha y hora:", fechahora );
+
     fetch("http://127.0.0.1:5000/torneo/inserttorneo", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nombre, fechahora, idAdministrador}),
+      body: JSON.stringify({ nombre, fechahra: fechaFormateada, idAdministrador}),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -314,10 +317,12 @@ class CRUDTorneo extends React.Component {
         <Modal isOpen={this.state.modalInsertar}>
           <ModalHeader>
             <div>
+
               <h3>Insertar Torneo</h3>
             </div>
           </ModalHeader>
           <ModalBody>
+
             <FormGroup>
               <label>Nombre:</label>
               <input
@@ -325,8 +330,10 @@ class CRUDTorneo extends React.Component {
                 name="nombre"
                 type="text"
                 onChange={this.handleChangeInsertar}
+                value={this.state.formInsertar.nombre}
               />
             </FormGroup>
+
             <FormGroup>
               <label>Fecha y Hora:</label>
               <DatePicker
@@ -339,6 +346,17 @@ class CRUDTorneo extends React.Component {
                 dateFormat="yyyy-MM-dd HH:mm:ss"
               />
             </FormGroup>
+            <FormGroup>
+              <label>ID Administrador:</label>
+              <input
+                className="form-control"
+                name="idAdministrador"
+                type="text"
+                onChange={this.handleChangeInsertar}
+                value={this.state.formInsertar.idAdministrador}
+              />
+            </FormGroup>
+
           </ModalBody>
           <ModalFooter>
             <Button color="primary" onClick={() => this.insertar()}>
@@ -352,6 +370,7 @@ class CRUDTorneo extends React.Component {
 
         <Modal isOpen={this.state.modalEliminar}>
           <ModalHeader>
+
             <div>
               <h3>Eliminar Torneo</h3>
             </div>
