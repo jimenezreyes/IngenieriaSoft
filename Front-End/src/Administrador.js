@@ -2,6 +2,7 @@ import React from 'react';
 import './Administrador.css';
 import { useNavigate } from 'react-router-dom';
 import CRUDTorneo from './CRUDTorneo';
+import Login from './Login';
 
 function Administrador() {
     const navigate = useNavigate();
@@ -9,6 +10,14 @@ function Administrador() {
         localStorage.clear();
         navigate('/');
     };
+
+    if (!localStorage.getItem('tipo_usuario')) {
+        return <Login />
+    }
+
+    if (localStorage.getItem('tipo_usuario') !== 'administrador') {
+        return('No tienes permisos para ver esta página.')
+    }
 
     return (
         <div className='Administrador'>

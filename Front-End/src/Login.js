@@ -1,14 +1,48 @@
 import React, { useState } from 'react';
-import { useNavigate} from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "./Login.css";
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const datosValidos = () => {
+    let errors = {};
+    let isValid = true;
+
+    if (!email) {
+      isValid = false;
+      errors["email"] = "Por favor ingresa tu correo.";
+    } else {
+      if (typeof email !== "undefined") {
+        let lastAtPos = email.lastIndexOf('@');
+        let lastDotPos = email.lastIndexOf('.');
+
+        if (!(lastAtPos < lastDotPos && lastAtPos > 0 && email.indexOf('@@') === -1 && lastDotPos > 2 && (email.length - lastDotPos) > 2)) {
+          isValid = false;
+          errors["email"] = "Correo inválido.";
+        }
+      }
+    }
+
+    if (!password) {
+      isValid = false;
+      errors["password"] = "Por favor ingresa tu contraseña.";
+    } else if (password.length < 8) {
+      isValid = false;
+      errors["password"] = "La contraseña debe tener al menos 8 caracteres.";
+    }
+
+    setErrors(errors);
+    return isValid;
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (!datosValidos()) {
+      return;
+    }
 
     try {
       const res = await fetch(`http://127.0.0.1:5000/login`, {
@@ -27,6 +61,12 @@ function Login() {
         // Muestra la alerta para contraseña incorrecta
         alert('Contraseña incorrecta');
       } else if (data.error === 'Ninguno') {
+        // Almacenar la info de usuario en localStorage
+        localStorage.setItem('tipo_usuario', data.tipo_usuario);
+        localStorage.setItem('id', data.id);
+        localStorage.setItem('nombre', data.nombre);
+        localStorage.setItem('apellido', data.apellido);
+        localStorage.setItem('email', data.email);
         if (data.tipo_usuario === 'participante') {
           navigate('/participante');
         } else if (data.tipo_usuario === 'superadmin') {
@@ -58,6 +98,11 @@ function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {
+            errors.email && <div className="alert alert-danger">
+              {errors.email}
+            </div>
+          }
         </div>
         <div className="form-group">
           <label htmlFor="password">Contraseña:</label>
@@ -67,6 +112,11 @@ function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {
+            errors.password && <div className="alert alert-danger">
+              {errors.password}
+            </div>
+          }
         </div>
         <nav>
           <ul>

@@ -106,9 +106,16 @@ def login():
             session["email"] = user.correo
             session["tipo_usuario"] = tipo_usuario
             session.modified = True
+            if (tipo_usuario == "superadmin"):
+                id_usuario = user.idSuperadmin
+            elif (tipo_usuario == "administrador"):
+                id_usuario = user.idAdministrador
+            else:
+                id_usuario = user.idParticipante
             return jsonify(
                 {
                     "error": "Ninguno",
+                    "id": id_usuario,
                     "nombre": user.nombre,
                     "apellido": user.apellido,
                     "email": user.correo,
