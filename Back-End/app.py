@@ -21,6 +21,7 @@ from flask_cors import CORS
 
 from controllers.AdminController import admin
 from controllers.TorneoController import torneo
+from controllers.ParticipanteController import participante
 
 from model.model_administrador import get_admin_by_email, get_all_admins, get_admin_by_id
 from model.model_superadmin import get_superadmin_by_email
@@ -54,6 +55,7 @@ app.config.from_mapping(
 #Agregamos controladores
 app.register_blueprint(admin)
 app.register_blueprint(torneo)
+app.register_blueprint(participante)
 
 db.init_app(app)
 CORS(app)

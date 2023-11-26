@@ -4,16 +4,19 @@ import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, La
 import './EditProfile.css';
 
 function EditProfile() {
-  const [idParticipante, setIdParticipante] = useState('');
-  const [nombre, setNombre] = useState('');
-  const [apellido, setApellido] = useState('');
-  const [correo, setCorreo] = useState('');
-  const [contrasena, setContrasena] = useState('');
-  const [gamertag, setGamertag] = useState('');
-  const [foto, setFoto] = useState(null);
+  const [formData, setFormData] = useState({
+    idParticipante: '',
+    nombre: '',
+    apellido: '',
+    correo: '',
+    contrasena: '',
+    gamertag: '',
+    foto: null,
+  });
 
   const [modal, setModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [contrasenaEliminar, setContrasenaEliminar] = useState('');
   const navigate = useNavigate();
 
   const toggleModal = () => setModal(!modal);
@@ -21,45 +24,31 @@ function EditProfile() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-    setFoto(file);
+    setFormData({
+      ...formData,
+      foto: file,
+    });
   };
 
   const handleGuardarCambios = async (e) => {
     e.preventDefault();
 
-    // Aquí puedes enviar los datos al servidor para actualizar el perfil
-    const datosActualizados = {
-      idParticipante,
-      nombre,
-      apellido,
-      correo,
-      contrasena,
-      gamertag,
-      foto,      
-    };
-
-    console.log('Datos actualizados:', datosActualizados);
-
-    // Luego, puedes realizar una solicitud al servidor para manejar la actualización del perfil.
-    // Utiliza fetch o axios según tu preferencia.
+    console.log('Datos actualizados:', formData);
+    
     try {
-      const res = await fetch(`http://127.0.0.1:5000/register`, {
+      const res = await fetch(`http://127.0.0.1:5000/participante/editarPerfil`, {
         method: 'PUT',
-        headers: {
+        headers: {            
             'Content-Type': 'application/json',
         },
-          body: JSON.stringify(datosActualizados),
+          body: JSON.stringify(formData),
       });
 
       const data = await res.json();
       console.log('Respuesta del servidor:', data);
-
-      // Puedes manejar la respuesta del servidor según tus necesidades
-      // Por ejemplo, cerrar el modal o mostrar un mensaje de éxito
-      toggleModal();
+      //toggleModal();
     } catch (error) {
-      console.error('Error al enviar datos al servidor:', error);
-      // Puedes manejar los errores y proporcionar retroalimentación al usuario si es necesario
+      console.error('Error al enviar datos al servidor:', error);     
     }
   };
 
@@ -68,13 +57,28 @@ function EditProfile() {
   };
 
   const handleConfirmarEliminar = async () => {
-    // Aquí puedes enviar la contraseña y el ID del usuario al servidor
-    // para confirmar y realizar la eliminación del perfil.
-    console.log('Confirmar eliminación con contraseña:', contrasena);
     // Lógica para eliminar el perfil en el servidor
-
-    // Cerrar el modal después de realizar la acción
-    toggleDeleteModal();
+    try {
+      const res = await fetch(`http://127.0.0.1:5000/participante/eliminarPerfil`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          idParticipante: formData.idParticipante,
+          contrasenaEliminar: contrasenaEliminar,
+        }),
+      });
+  
+      const data = await res.json();
+      console.log('Respuesta del servidor:', data); 
+      
+  
+      // Cerrar el modal después de realizar la acción
+      toggleDeleteModal();
+    } catch (error) {
+      console.error('Error al enviar datos al servidor:', error);      
+    }
   };
 
   const handleClickVolver = () => {
@@ -91,8 +95,8 @@ function EditProfile() {
           <Input
             type="number"
             id="idParticipante"
-            value={idParticipante}
-            onChange={(e) => setIdParticipante(e.target.value)}            
+            value={formData.idParticipante}
+            onChange={(e) => setFormData({ ...formData, idParticipante: e.target.value })}          
           />
         </FormGroup>
 
@@ -101,8 +105,8 @@ function EditProfile() {
           <Input
             type="text"
             id="nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}            
+            value={formData.nombre}
+            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}            
           />
         </FormGroup>
 
@@ -111,8 +115,8 @@ function EditProfile() {
           <Input
             type="text"
             id="apellido"
-            value={apellido}
-            onChange={(e) => setApellido(e.target.value)}           
+            value={formData.apellido}
+            onChange={(e) => setFormData({ ...formData, apellido: e.target.value })}          
           />
         </FormGroup>
 
@@ -121,8 +125,8 @@ function EditProfile() {
           <Input
             type="email"
             id="correo"
-            value={correo}
-            onChange={(e) => setCorreo(e.target.value)}            
+            value={formData.correo}
+            onChange={(e) => setFormData({ ...formData, correo: e.target.value })}           
           />
         </FormGroup>
 
@@ -131,8 +135,8 @@ function EditProfile() {
           <Input
             type="password"
             id="contrasena"
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}            
+            value={formData.contrasena}
+            onChange={(e) => setFormData({ ...formData, contrasena: e.target.value })}            
           />
         </FormGroup>
         
@@ -142,8 +146,8 @@ function EditProfile() {
           <Input
             type="text"
             id="gamertag"
-            value={gamertag}
-            onChange={(e) => setGamertag(e.target.value)}            
+            value={formData.gamertag}
+            onChange={(e) => setFormData({ ...formData, gamertag: e.target.value })}            
           />
         </FormGroup>
 
@@ -205,8 +209,8 @@ function EditProfile() {
               <Input
                 type="password"
                 id="contrasenaEliminar"
-                value={contrasena}
-                onChange={(e) => setContrasena(e.target.value)}
+                value={contrasenaEliminar}
+                onChange={(e) => setContrasenaEliminar(e.target.value)}
                 required
               />
             </FormGroup>
