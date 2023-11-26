@@ -28,11 +28,18 @@ def insert_torneo():
         datos_json = request.get_json()
         nombre = datos_json["nombre"]
         fecha_hora_str = datos_json["fechaHora"]
-        fecha_hora = datetime.strptime(fecha_hora_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+        # Ajustamos el formato según la presencia o ausencia de fracciones de segundo
+        fecha_hora_formato = "%Y-%m-%dT%H:%M:%S"
+
+        # Tratamos de analizar la fecha y hora
+        try:
+            fecha_hora = datetime.strptime(fecha_hora_str, fecha_hora_formato)
+        except ValueError:
+            return jsonify({"error": "Formato de fecha y hora inválido"}), 400
+
         idAdministrador = datos_json.get("idAdministrador")
 
-
-        nuevo_torneo = Torneo( nombre, fecha_hora, idAdministrador)
+        nuevo_torneo = Torneo(nombre, fecha_hora, idAdministrador)
 
         try:
             db.session.add(nuevo_torneo)
