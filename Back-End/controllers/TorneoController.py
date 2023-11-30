@@ -37,7 +37,7 @@ def insert_torneo():
         except ValueError:
             return jsonify({"error": "Formato de fecha y hora inválido"}), 400
 
-        id_Administrador = int(request.headers.get("idAdministrador"));
+        idAdministrador = datos_json.get("idAdministrador")
 
         nuevo_torneo = Torneo(nombre, fecha_hora, idAdministrador)
 
@@ -61,7 +61,7 @@ def update_torneo():
         torneo = get_torneo_by_id(id)
 
         #Cambiar la fecha a un objeto datetime
-        fecha_hora = datetime.strptime(fecha_hora_str, "%Y-%m-%dT%H:%M:%S.%fZ")
+        fecha_hora = datetime.strptime(fecha_hora_str, "%Y-%m-%dT%H:%M:%S")
 
 
         torneo.nombre = nombre

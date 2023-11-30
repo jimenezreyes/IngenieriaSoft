@@ -90,7 +90,7 @@ class CRUDTorneo extends React.Component {
 
   editar = () => {
     const { id, nombre, fechahora, idAdministrador } = this.state.formActualizar;
-    const fechaFormateada = new Date(fechahora).toISOString().slice(0, 18);
+    const fechaFormateada = fechahora.toISOString().slice(0, 19);
 
     fetch("http://127.0.0.1:5000/torneo/updatetorneo", {
       method: "PUT",
@@ -140,8 +140,6 @@ class CRUDTorneo extends React.Component {
   insertar = () => {
     const { nombre, fechahora, idAdministrador } = this.state.formInsertar;
     const fechaFormateada = fechahora.toISOString().slice(0, 19);
-
-    const id_Administrador = localStorage.getItem("idAdministrador");
     console.log("fecha y hora:", fechahora);
 
     fetch("http://127.0.0.1:5000/torneo/inserttorneo", {
@@ -149,7 +147,7 @@ class CRUDTorneo extends React.Component {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ nombre, fechaHora: fechaFormateada, id_Administrador }),
+      body: JSON.stringify({ nombre, fechaHora: fechaFormateada + ".000Z", idAdministrador }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -183,12 +181,10 @@ class CRUDTorneo extends React.Component {
   };
 
   handleChangeFechaHoraActualizar = (date) => {
-    const fechaConSegundosAjustados = new Date(date);
-    fechaConSegundosAjustados.setSeconds(0);
     this.setState((prevState) => ({
       formActualizar: {
         ...prevState.formActualizar,
-        fechahora: fechaConSegundosAjustados, // Ajusta según tus necesidades
+        fechahora: new Date(date.setSeconds(0)), // Ajusta según tus necesidades
       },
     }));
   };
@@ -300,7 +296,7 @@ class CRUDTorneo extends React.Component {
                 selected={this.state.formActualizar.fechahora}
                 onChange={(date) => this.handleChangeFechaHoraActualizar(date)}
                 showTimeSelect
-                timeFormat="HH:mm:ss"
+                timeFormat="HH:mm"
                 timeIntervals={15}
                 dateFormat="yyyy-MM-dd HH:mm:ss"
               />
@@ -348,8 +344,6 @@ class CRUDTorneo extends React.Component {
                 dateFormat="yyyy-MM-dd HH:mm:ss"
               />
             </FormGroup>
-
-            {false && (
             <FormGroup>
               <label>ID Administrador:</label>
               <input
@@ -359,9 +353,7 @@ class CRUDTorneo extends React.Component {
                 onChange={this.handleChangeInsertar}
                 value={this.state.formInsertar.idAdministrador}
               />
-            </FormGroup> 
-            )}
-          
+            </FormGroup>
 
           </ModalBody>
           <ModalFooter>
