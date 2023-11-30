@@ -21,7 +21,7 @@ function Administrador() {
 
     return (
         <div className='Administrador'>
-            <h1>¡Bienvenido Administrador!</h1>
+            <h1>¡Hola, administrador!</h1>
             <CRUDTorneo />
             <button onClick={handleLogout}>Cerrar Sesión</button>
         </div>

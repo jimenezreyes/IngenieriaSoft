@@ -46,7 +46,7 @@ class VistaTorneos extends React.Component {
       <>
       <h1>  
         <img src={iconoJuego1} alt="Icono de juegos" style={{ height: '100px', marginRight: '20px' }} />
-        Torneos Registrados 
+        Torneos
         <img src={iconoJuego2} alt="Icono de juegos" style={{ height: '100px', marginLeft: '10px' }} /></h1>
 
         <Container className="CRUDAdmin">

@@ -149,12 +149,13 @@ class CRUDAdmin extends React.Component {
       return;
     }
     const { nombre, apellido, email, psswd } = this.state.formInsertar;
+    var idCreador = localStorage.getItem('id');
     fetch("http://127.0.0.1:5000/admin/insertadmin", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ nombre, apellido, email, psswd }),
+      body: JSON.stringify({ nombre, apellido, email, psswd, idCreador }),
     })
       .then(response => response.json())
       .then(() => {
@@ -247,7 +248,7 @@ class CRUDAdmin extends React.Component {
         let lastAtPos = this.state.formActualizar.email.lastIndexOf('@');
         let lastDotPos = this.state.formActualizar.email.lastIndexOf('.');
 
-        if (!(lastAtPos < lastDotPos && lastAtPos > 0 && this.state.formActualizar.email.indexOf('@@') === -1 && lastDotPos > 2 && (this.state.formInsertar.email.length - lastDotPos) > 2)) {
+        if (!(lastAtPos < lastDotPos && lastAtPos > 0 && this.state.formActualizar.email.indexOf('@@') === -1 && lastDotPos > 2 && (this.state.formActualizar.email.length - lastDotPos) > 2)) {
           isValid = false;
           errorsEditar["email"] = "Correo inválido.";
         }
