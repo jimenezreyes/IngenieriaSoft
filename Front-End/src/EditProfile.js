@@ -17,9 +17,11 @@ function EditProfile() {
   const [modal, setModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [contrasenaEliminar, setContrasenaEliminar] = useState('');
+  const [deleteError, setDeleteError] = useState('');
   const [errors, setErrors] = useState({});
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [intentosFallidos, setIntentosFallidos] = useState(0);
   const navigate = useNavigate();
 
   const toggleModal = () => setModal(!modal);
@@ -152,11 +154,16 @@ function EditProfile() {
 
   const handleEliminarPerfil = () => {
     toggleDeleteModal();
+    setDeleteError('');
   };
 
   const handleConfirmarEliminar = async () => {
-    // Lógica para eliminar el perfil en el servidor
     try {
+      if (!contrasenaEliminar) {
+        setDeleteError('Ingresa tu contraseña');
+        return;
+      }
+      // Lógica para eliminar el perfil en el servidor
       const res = await fetch(`http://127.0.0.1:5000/participante/eliminarPerfil`, {
         method: 'DELETE',
         headers: {
@@ -169,13 +176,34 @@ function EditProfile() {
       });
   
       const data = await res.json();
-      console.log('Respuesta del servidor:', data); 
-      
+      console.log('Respuesta del servidor:', data);
   
-      // Cerrar el modal después de realizar la acción
-      toggleDeleteModal();
+      // Validar la respuesta del servidor
+      if (data.message === 'Perfil eliminado exitosamente') {
+        // Cerrar sesión y redirigir a la página de inicio
+        localStorage.clear();
+        navigate('/');
+      } else if (data.error === 'Contraseña incorrecta') {
+        // Aumentar el contador de intentos fallidos
+        setIntentosFallidos(intentosFallidos + 1);
+         // Mostrar el mensaje de error en el modal
+        if (intentosFallidos < 2) {
+          setDeleteError(`Contraseña incorrecta. Intentos restantes: ${2 - intentosFallidos}`);
+        } else {
+          setDeleteError('Demasiados intentos fallidos. Se cerrará la sesión.');
+        // Aquí puedes agregar la lógica para cerrar la sesión después de tres intentos fallidos
+          setTimeout(() => {
+          // Cerrar sesión y redirigir a la página de inicio
+            localStorage.clear();
+            navigate('/');
+          }, 3000);
+        }       
+      } else {      
+            // Actualizar el estado con el mensaje de error en caso de error de red
+        setDeleteError('Error de red, inténtalo de nuevo');
+      }
     } catch (error) {
-      console.error('Error al enviar datos al servidor:', error);      
+      console.error('Error al enviar datos al servidor:', error);
     }
   };
 
@@ -312,6 +340,7 @@ function EditProfile() {
               />
             </FormGroup>
           </Form>
+          {deleteError && <div className="alert alert-danger">{deleteError}</div>}
         </ModalBody>
         <ModalFooter>
           <Button color="danger" onClick={handleConfirmarEliminar}>

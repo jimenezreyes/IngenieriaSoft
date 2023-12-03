@@ -75,7 +75,7 @@ def eliminar_perfil():
         id = datos_json.get("idParticipante")
         contrasena = datos_json.get("contrasenaEliminar")
 
-        if id is None or contrasena is None:
+        if contrasena is None:
             return jsonify({'error': 'ID de participante o contraseña no proporcionados'}), 400
 
         try:
