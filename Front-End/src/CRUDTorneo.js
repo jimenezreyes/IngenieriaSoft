@@ -2,7 +2,7 @@
 import React from "react";
 import "./CRUDTorneo.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Table, Button, Container, Modal, ModalHeader, ModalBody, FormGroup, ModalFooter } from "reactstrap";
+import { Table, Button, Container, Modal, ModalHeader, ModalBody, FormGroup, ModalFooter, Input} from "reactstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 
@@ -229,15 +229,17 @@ class CRUDTorneo extends React.Component {
             </Button>
           </div>
           <div className="barraBusqueda">
-            <img src="lupa.png" alt="Ícono de búsqueda" style={{ height: '26px' }} />{" "}
-            <input
-              type="text"
-              placeholder="Buscar"
-              className="textField"
-              name="busqueda"
-              value={this.state.busqueda}
-              onChange={this.handleChangeBuscar}
-            />
+            <FormGroup className="d-flex align-items-center">
+              <img src="lupa.png" alt="Ícono de búsqueda" style={{ height: '26px', marginRight: '10px'}} />{" "}
+              <Input
+                type="text"
+                placeholder="Buscar"
+                className="textField"
+                name="busqueda"
+                value={this.state.busqueda}
+                onChange={this.handleChangeBuscar}
+              />
+            </FormGroup>
           </div>
           <br />
           <br />

@@ -10,6 +10,7 @@ import {
   ModalBody,
   FormGroup,
   ModalFooter,
+  Input
 } from "reactstrap";
 
 class CRUDAdmin extends React.Component {
@@ -270,15 +271,17 @@ class CRUDAdmin extends React.Component {
             <Button style={{ marginRight: '10px' }} color="success" onClick={() => this.mostrarTodosTorneos()}>Ver Torneos Actuales</Button>
           </div>
           <div className="barraBusqueda">
-            <img src="lupa.png" alt="Ícono de búsqueda" style={{ height: '26px' }} />{" "}
-            <input
-              type="text"
-              placeholder="Buscar"
-              className="textField"
-              name="busqueda"
-              value={this.state.busqueda}
-              onChange={this.handleChangeBuscar}
-            />
+          <FormGroup className="d-flex align-items-center">
+              <img src="lupa.png" alt="Ícono de búsqueda" style={{ height: '26px', marginRight: '10px'}} />{" "}
+              <Input
+                type="text"
+                placeholder="Buscar"
+                className="textField"
+                name="busqueda"
+                value={this.state.busqueda}
+                onChange={this.handleChangeBuscar}
+              />
+          </FormGroup>
           </div>
           <br />
           <br />
