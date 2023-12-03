@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input } from 'reactstrap';
 import './EditProfile.css';
+import Login from './Login';
 
-function EditProfile() {
+function EditProfile() { 
+
   const [formData, setFormData] = useState({
     idParticipante: '',
     nombre: '',
@@ -13,7 +15,7 @@ function EditProfile() {
     gamertag: '',
     foto: null,
   });
-
+  
   const [modal, setModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [contrasenaEliminar, setContrasenaEliminar] = useState('');
@@ -22,6 +24,7 @@ function EditProfile() {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [intentosFallidos, setIntentosFallidos] = useState(0);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
   const navigate = useNavigate();
 
   const toggleModal = () => setModal(!modal);
@@ -33,6 +36,13 @@ function EditProfile() {
     setFormData({ ...formData, idParticipante });
   }, []);
 
+  if (!localStorage.getItem('tipo_usuario')) {
+    return <Login />
+  }
+
+  if (localStorage.getItem('tipo_usuario') !== 'participante') {
+    return('No tienes permisos para ver esta página.')
+  }
 
   const datosValidos = () => {
     let errors = {};
@@ -125,7 +135,8 @@ function EditProfile() {
 
         if (formData.foto) {
           localStorage.setItem('foto', formData.foto);
-        }  
+        }
+        openSuccessModal();  
       } else if (data.error === 'Error, correo asociado a otra cuenta. Puede estar asociado a una cuenta no apta para participar.') {
         setErrors({correo: data.error });
       } else if (data.error === 'Error, tag ya asignado'){
@@ -156,6 +167,7 @@ function EditProfile() {
     toggleDeleteModal();
     setDeleteError('');
   };
+  
 
   const handleConfirmarEliminar = async () => {
     try {
@@ -213,6 +225,10 @@ function EditProfile() {
 
   const handleClickVolver = () => {
     navigate('/participante'); // Navegar hacia atrás
+  };
+
+  const openSuccessModal = () => {
+    setSuccessModalOpen(true);
   };
 
   return (
@@ -350,6 +366,18 @@ function EditProfile() {
             Cancelar
           </Button>
         </ModalFooter>
+      </Modal>
+
+      <Modal isOpen={successModalOpen} toggle={() => setSuccessModalOpen(false)}>
+      <ModalHeader toggle={() => setSuccessModalOpen(false)}>Éxito</ModalHeader>
+        <ModalBody>
+          <p>Los datos han sido actualizados correctamente.</p>
+        </ModalBody>
+      <ModalFooter>
+          <Button color="primary" onClick={() => setSuccessModalOpen(false)}>
+            Cerrar
+          </Button>
+      </ModalFooter>
       </Modal>
 
       {isErrorModalOpen && (

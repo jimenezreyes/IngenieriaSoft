@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import './Register.css';
+import './Login.js'
 import { useNavigate } from 'react-router-dom';
-import { Button, FormGroup, Label, Input } from 'reactstrap';
+import { Button, FormGroup, Label, Input, Modal, ModalHeader, ModalBody } from 'reactstrap';
 function Register() {
   const [nombre, setNombre] = useState('');
   const [apellido, setApellido] = useState('');
@@ -10,6 +11,7 @@ function Register() {
   const [errors, setErrors] = useState({});
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -93,9 +95,11 @@ function Register() {
         localStorage.setItem('apellido', apellido);
         localStorage.setItem('email', correo);
         localStorage.setItem('contrasena', contrasena);
-        localStorage.setItem('gamertag', '');              
+        localStorage.setItem('gamertag', '');
+        
+        openWelcomeModal();
         // Redirigir a la vista EditProfile
-        navigate('/editarPerfil');
+        
       } else if (data.error === 'Error, correo asociado a otra cuenta. Puede estar asociado a una cuenta no apta para participar.') {
         setErrors({ correo: data.error });
       } else if (data.error) {
@@ -118,15 +122,29 @@ function Register() {
         setIsErrorModalOpen(true);
       }
     }
-  };  
+  }; 
+  
+  const openWelcomeModal = () => {
+    setWelcomeModalOpen(true);
+    // Configura el temporizador para cerrar el modal después de 3.5 segundos
+    setTimeout(() => {
+      setWelcomeModalOpen(false);
+      // Realiza la navegación hacia la vista de editar perfil
+      navigate('/editarPerfil'); // Asegúrate de cambiar la ruta según tu configuración
+    }, 3500);
+  };
 
   const handleCloseModal = () => {
     setIsErrorModalOpen(false);
   };
 
   const handleClick = () => {
-    navigate(-1); // Navegar hacia atrás
+    navigate('/'); // Navegar hacia atrás
   };
+
+  if (localStorage.getItem('tipo_usuario')) {
+    return ('Para registrar un nuevo usuario, debes cerrar sesión primero')
+  } 
 
   return (
     <div className="registro">
@@ -192,11 +210,18 @@ function Register() {
           </li>
           <li>
             <Button color="primary" onClick={handleClick}>
-              Volver
+              Volver al inicio
             </Button>
           </li>
         </ul>
       </form>
+
+      <Modal isOpen={welcomeModalOpen} toggle={() => setWelcomeModalOpen(false)}>
+        <ModalHeader toggle={() => setWelcomeModalOpen(false)}>¡Bienvenido!</ModalHeader>
+          <ModalBody>
+            <p>El registro fue exitoso, te damos la bienvenida. Por favor, espera un meow-mento...</p>
+          </ModalBody>
+      </Modal>
 
       {isErrorModalOpen && (
         <div className="modal">
