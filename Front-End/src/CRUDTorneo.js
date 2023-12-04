@@ -5,7 +5,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Table, Button, Container, Modal, ModalHeader, ModalBody, FormGroup, ModalFooter, Input} from "reactstrap";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import moment from "moment";
 
 
 class CRUDTorneo extends React.Component {
@@ -90,7 +90,8 @@ class CRUDTorneo extends React.Component {
 
   editar = () => {
     const { id, nombre, fechahora, idAdministrador } = this.state.formActualizar;
-    const fechaFormateada = fechahora.toISOString().slice(0, 19);
+    /*const fechaFormateada = fechahora.toISOString().slice(0, 19);*/
+    const fechaFormateada = moment(fechahora).format("YYYY-MM-DDTHH:mm:ss");
 
     fetch("http://127.0.0.1:5000/torneo/updatetorneo", {
       method: "PUT",
@@ -184,7 +185,7 @@ class CRUDTorneo extends React.Component {
     this.setState((prevState) => ({
       formActualizar: {
         ...prevState.formActualizar,
-        fechahora: new Date(date.setSeconds(0)), // Ajusta según tus necesidades
+        fechahora:date, // Ajusta según tus necesidades
       },
     }));
   };
@@ -298,7 +299,7 @@ class CRUDTorneo extends React.Component {
                 selected={this.state.formActualizar.fechahora}
                 onChange={(date) => this.handleChangeFechaHoraActualizar(date)}
                 showTimeSelect
-                timeFormat="HH:mm"
+                timeFormat="HH:mm:ss"
                 timeIntervals={15}
                 dateFormat="yyyy-MM-dd HH:mm:ss"
               />
