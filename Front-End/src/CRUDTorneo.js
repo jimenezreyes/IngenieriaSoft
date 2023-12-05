@@ -392,7 +392,7 @@ class CRUDTorneo extends React.Component {
           <ModalFooter>
             <Button style={{ width: "150px", display: "block", marginBottom: "10px", 
                     backgroundColor: '#F05E16', borderColor: '#F05E16', transition: 'background-color 0.3s ease' }}
-                    onClick={() => this.eliminar()}  onMouseOver={(e) => e.target.style.backgroundColor = '#B05625'}
+                    onClick={() => this.eliminar({ id: this.state.torneoAEliminar })}  onMouseOver={(e) => e.target.style.backgroundColor = '#B05625'}
                     onMouseOut={(e) => e.target.style.backgroundColor = '#F05E16'}>
               Confirmar
             </Button>

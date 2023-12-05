@@ -5,6 +5,7 @@ import { FormGroup, Button } from 'reactstrap';
 import CRUDTorneo from './CRUDTorneo';
 import Login from './Login';
 import DancingCat from './DancingCat';
+import UserMenu from './UserMenu';
 
 function Administrador() {
     const navigate = useNavigate();
@@ -40,12 +41,8 @@ function Administrador() {
     return (
         <div className='Administrador'>
             <h1>¡Hola, administrador!</h1>
+            <UserMenu handleLogout={handleLogout}/>
             <CRUDTorneo />
-            <FormGroup className="mb-3 text-center">
-                <Button style={{ width: '200px' }} color="primary" onClick={handleLogout}>
-                    Cerrar Sesión
-                </Button>
-            </FormGroup>
         </div>
     );
 }

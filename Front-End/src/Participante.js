@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import VistaTorneos from './VistaTorneos';
 import Login from './Login';
 import DancingCat from './DancingCat';
+import UserMenu from './UserMenu';
 
 function Participante() {
     const navigate = useNavigate();
@@ -40,13 +41,9 @@ function Participante() {
     return (
       <div className="Participante">
        <h1>¡Hola, participante!</h1>
+       <UserMenu handleLogout={handleLogout} buttonEdit={true}/>
         Estos son los torneos disponibles:
         <VistaTorneos />
-          <FormGroup>
-            <Button style={{ width: '200px' }} color = 'primary' onClick={handleLogout} >
-              Cerrar Sesión
-            </Button>
-          </FormGroup>
       </div>
     );
 }
