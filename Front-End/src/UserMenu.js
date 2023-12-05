@@ -12,12 +12,16 @@ function UserMenu({ handleLogout, buttonEdit = false }) {
     }
 
     function handleEdit(){
-        navigate("/editarPerfil")
+        navigate("/editarPerfil");
     }
 
-    return <div className="UserMenu">
+    function handleVer(){
+        navigate("/verPerfil");
+    }
 
-        <button onClick={handleOpen}> {
+    return <div className="container">
+
+        <button className="buttonUserMenu" onClick={handleOpen}> {
             !open ? 
             <span>&equiv;</span> :
             <span>&times;</span>
@@ -25,8 +29,12 @@ function UserMenu({ handleLogout, buttonEdit = false }) {
 
         {!open ? null : 
         <>
-        {buttonEdit ? 
-        <button onClick={handleEdit}> Editar Perfil </button>:
+
+        {buttonEdit ?
+        <>
+        <button onClick={handleVer}> Ver Perfil </button> 
+        <button onClick={handleEdit}> Editar Perfil </button>
+        </>:
         null
         }
         <button onClick={handleLogout}> Cerrar Sesión </button>

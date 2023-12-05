@@ -54,6 +54,7 @@ function Login() {
         body: JSON.stringify({ email, password })
       });
       const data = await res.json();
+      console.log(data)
 
       if (data.error === 'Ese correo no existe') {
         // Muestra la alerta para el correo no existente
@@ -68,6 +69,7 @@ function Login() {
         localStorage.setItem('nombre', data.nombre);
         localStorage.setItem('apellido', data.apellido);
         localStorage.setItem('email', data.email);
+        localStorage.setItem('gamertag', data.gamerTag);
         if (data.tipo_usuario === 'participante') {
           navigate('/participante');
         } else if (data.tipo_usuario === 'superadmin') {

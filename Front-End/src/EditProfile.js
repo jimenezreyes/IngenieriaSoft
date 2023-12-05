@@ -9,11 +9,11 @@ function EditProfile() {
 
   const [formData, setFormData] = useState({
     idParticipante: '',
-    nombre: '',
-    apellido: '',
-    correo: '',
+    nombre: localStorage.getItem('nombre'),
+    apellido: localStorage.getItem('apellido'),
+    correo: localStorage.getItem('email'),
     contrasena: '',
-    gamertag: '',
+    gamertag: localStorage.getItem('gamertag'),
     foto: null,
   });
   
