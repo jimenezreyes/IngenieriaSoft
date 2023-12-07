@@ -4,6 +4,7 @@ from alchemyClasses import db
 
 from model.model_torneo import get_all_torneos, get_torneo_by_id, get_current_datetime
 from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
 torneo = Blueprint('torneo', __name__, url_prefix='/torneo')
 
@@ -28,6 +29,8 @@ def insert_torneo():
         datos_json = request.get_json()
         nombre = datos_json["nombre"]
         fecha_hora_str = datos_json["fechaHora"]
+
+        fecha_hora_utc = datetime.strptime(fecha_hora_str, "%Y-%m-%dT%H:%M:%S")
         # Ajustamos el formato según la presencia o ausencia de fracciones de segundo
         fecha_hora_formato = "%Y-%m-%dT%H:%M:%S"
 
@@ -39,7 +42,7 @@ def insert_torneo():
 
         idAdministrador = datos_json.get("idAdministrador")
 
-        nuevo_torneo = Torneo(nombre, fecha_hora, idAdministrador)
+        nuevo_torneo = Torneo(nombre, fecha_hora_utc, idAdministrador)
 
         try:
             db.session.add(nuevo_torneo)

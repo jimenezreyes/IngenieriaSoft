@@ -140,7 +140,8 @@ class CRUDTorneo extends React.Component {
 
   insertar = () => {
     const { nombre, fechahora, idAdministrador } = this.state.formInsertar;
-    const fechaFormateada = fechahora.toISOString().slice(0, 19);
+    /*const fechaFormateada = fechahora.toISOString().slice(0, 19); */
+    const fechaFormateada = moment(fechahora).format("YYYY-MM-DDTHH:mm:ss");
     console.log("fecha y hora:", fechahora);
 
     fetch("http://127.0.0.1:5000/torneo/inserttorneo", {
@@ -352,7 +353,7 @@ class CRUDTorneo extends React.Component {
                 selected={this.state.formInsertar.fechahora}
                 onChange={(date) => this.handleChangeFechaHoraActualizar(date)}
                 showTimeSelect
-                timeFormat="HH:mm"
+                timeFormat="HH:mm:ss"
                 timeIntervals={15}
                 dateFormat="yyyy-MM-dd HH:mm:ss"
               />
