@@ -60,7 +60,7 @@ def update_torneo():
         nombre = datos_json["nombre"]
         fecha_hora_str = datos_json["fechahora"]
 
-        idAdministrador = datos_json["idAdministrador"]
+        idAdministrador = int(datos_json["idAdministrador"])
         torneo = get_torneo_by_id(id)
 
         #Cambiar la fecha a un objeto datetime
